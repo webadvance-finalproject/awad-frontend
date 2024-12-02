@@ -1,30 +1,27 @@
-import { useState } from 'react'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect } from 'react';
+import SignUp from './pages/auth/SignUp'
+import Login from './pages/auth/Login'
+import Logout from './pages/auth/Logout';
+import Container from '@mui/material/Container'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Profile from './pages/Profile';
+import AuthListener from './utils/AuthListener';
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <Router>
+      <AuthListener />
+      <Container sx={{ display: "flex", flexDirection: 'column', alignItems: "center" }}>
+        <Routes>
+          <Route path='/profile' element={<Profile />} />
+          <Route path='/register' element={<SignUp />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/logout' element={<Logout/>} />
+          <Route path='*' element={<Profile />} />
+        </Routes>
+      </Container>
+    </Router>
   )
 }
 
