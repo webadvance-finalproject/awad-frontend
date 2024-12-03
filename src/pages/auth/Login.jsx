@@ -10,6 +10,7 @@ import * as yup from 'yup'
 import { auth } from '../../config/firebase'
 import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
 import {useNavigate, Link} from 'react-router-dom'
+import { useStore } from '../../store'
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -17,6 +18,7 @@ const Login = () => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate()
+    const user = useStore(state => state.user)
 
     const validationSchema = yup.object().shape({
         email: yup.string().email('Email không hợp lệ').required('Vui lòng nhập email'),

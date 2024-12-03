@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React, {useState, useEffect } from 'react';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useStore } from '../store';
 import { app } from "../config/firebase";
 import { useNavigate } from 'react-router-dom';
 
-const AuthListener = () => {
+const AuthListener = ({children}) => {
+  const [isLoading, setIsLoading] = useState(true);
   const setUser = useStore(state => state.setUser);
   const auth = getAuth(app);
   const navigate = useNavigate();
@@ -16,14 +17,15 @@ const AuthListener = () => {
       } else {
         console.log("not signed in");
         setUser(null);
-        navigate('/login'); // Navigate to login if not signed in
+        navigate('/login');
       }
+      setIsLoading(false);
     });
 
     return () => unsubscribe(); // Clean up subscription on unmount
-  }, [auth, setUser]);
+  }, []);
 
-  return null; // This component does not render anything
+  return isLoading ? null : children; // Only return children when loading is finished
 };
 
 export default AuthListener;
