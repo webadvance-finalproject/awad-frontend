@@ -4,7 +4,8 @@ import { Typography, Button } from '@mui/material';
 import { useStore } from '../store'
 import { signOut } from 'firebase/auth';
 import { auth } from '../config/firebase';
-
+import Header from "../components/Header";
+import styles from './Profile.module.css';
 const Profile = () => {
     const user = useStore((state) => state.user);
     const navigate = useNavigate();
@@ -15,17 +16,17 @@ const Profile = () => {
     }
 
     return (
-        <>
+        <div className={styles.container}>
             {user ? (
-                <>
-                    <Typography variant='h1'>Profile</Typography>
-                    {user && <Typography variant='h5'>Welcome {user.email}</Typography>}
-                    <Button variant='contained' color='error' sx={{mt: '15px'}} onClick={handleLogout}>Logout</Button>
-                </>
+                <div className={styles.container}> 
+                    <Header handleLogout={handleLogout}/>
+                    <Typography variant='h1' sx={{ textAlign: "center" }} >Profile</Typography>
+                    {user && <Typography variant='h5' sx={{ textAlign: "center" }}>Welcome {user.email}</Typography>}
+                </div>
             ) : (
                 <div>Loading...</div>
             )}
-        </>
+        </div>
     )
 }
 
