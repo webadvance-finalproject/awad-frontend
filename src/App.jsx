@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+// import { useEffect } from 'react';
 import SignUp from './pages/auth/SignUp'
 import Login from './pages/auth/Login'
 import Logout from './pages/auth/Logout';
@@ -14,7 +14,15 @@ function App() {
   return (
     <Router>
       <AuthListener>
-        <Container sx={{ display: "flex", flexDirection: 'column', alignItems: "center" }}>
+        <Container
+          maxWidth={false}
+          disableGutters
+          sx={{
+            display: "flex", flexDirection: 'column', alignItems: "center", justifyContent: "center",
+            width: "100%",
+            padding: "0 !important",
+            margin: "0 !important",
+          }} >
           <Routes>
             <Route element={<RedirectIfAuthenticated />} >
               <Route path='/register' element={<SignUp />} />
@@ -24,7 +32,7 @@ function App() {
               <Route path='/profile' element={<Profile />} />
               <Route path='*' element={<Profile />} />
             </Route>
-              <Route path='/logout' element={<Logout />} />
+            <Route path='/logout' element={<Logout />} />
           </Routes>
         </Container>
       </AuthListener>
@@ -33,3 +41,5 @@ function App() {
 }
 
 export default App
+
+// sx={{ display: "flex", flexDirection: 'column', alignItems: "center", justifyContent: "center", padding: '0 !important'}}
