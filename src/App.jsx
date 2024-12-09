@@ -33,12 +33,10 @@ function App() {
             </Route>
             <Route element={<ProtectedRoute />}>
               <Route path='/profile' element={<Profile />} />
+              <Route path='/movie/:id' element={<Movie />} />
               <Route path='*' element={<Profile />} />
             </Route>
             <Route path='/logout' element={<Logout />} />
-            <Route element={<ProtectedRoute />}>
-              <Route path='/movie/:id' element={<Movie />} />
-            </Route>
           </Routes>
         </Container>
       </AuthListener>
