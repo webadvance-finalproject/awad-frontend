@@ -5,6 +5,7 @@ import Logout from './pages/auth/Logout';
 import Container from '@mui/material/Container'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Profile from './pages/Profile';
+import Movie from './pages/Movie';
 import AuthListener from './utils/AuthListener';
 import ProtectedRoute from './utils/ProtectedRoute';
 import RedirectIfAuthenticated from './utils/RedirectIfAuthenticated';
@@ -33,6 +34,9 @@ function App() {
               <Route path='*' element={<Profile />} />
             </Route>
             <Route path='/logout' element={<Logout />} />
+            <Route element={<ProtectedRoute />}>
+              <Route path='/movie/:id' element={<Movie />} />
+            </Route>
           </Routes>
         </Container>
       </AuthListener>
