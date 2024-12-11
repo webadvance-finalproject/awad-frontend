@@ -5,6 +5,7 @@ import Logout from './pages/auth/Logout';
 import Container from '@mui/material/Container'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Profile from './pages/Profile';
+import Home from './pages/Home';
 import Movie from './pages/Movie';
 import AuthListener from './utils/AuthListener';
 import ProtectedRoute from './utils/ProtectedRoute';
@@ -25,6 +26,7 @@ function App() {
             margin: "0 !important",
           }} >
           <Routes>
+            <Route path='/' element={<Home />} />
             <Route element={<RedirectIfAuthenticated />} >
               <Route path='/register' element={<SignUp />} />
               <Route path='/login' element={<Login />} />
