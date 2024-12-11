@@ -13,3 +13,8 @@ export const getTrendingMoviesByWeek = async ({ token, page }) => {
 export const getMovieData = async ({movieID, token}) => {
     return makeRequest(HTTP_METHOD.GET, `${MOVIE_URI}/${movieID}`,null,true,token);
 };
+
+export const searchMovie = async ({keyword, token, page}) => {
+    const data = {keyword}
+    return makeRequest(HTTP_METHOD.GET, `${MOVIE_URI}/search`,data,true,token, page);
+}

@@ -10,6 +10,7 @@ import Movie from './pages/Movie';
 import AuthListener from './utils/AuthListener';
 import ProtectedRoute from './utils/ProtectedRoute';
 import RedirectIfAuthenticated from './utils/RedirectIfAuthenticated';
+import Search from './pages/Search';
 
 function App() {
 
@@ -33,6 +34,7 @@ function App() {
             </Route>
             <Route element={<ProtectedRoute />}>
               <Route path='/profile' element={<Profile />} />
+              <Route path='/search' element={<Search />} />
               <Route path='/movie/:id' element={<Movie />} />
               <Route path='*' element={<Profile />} />
             </Route>
