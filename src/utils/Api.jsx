@@ -9,14 +9,16 @@ export const makeRequest = async (
     url,
     data = null,
     redirectToLogin = true,
-    token
+    token,
+    page = null
 ) => {
     let res = null;
     try {
+        const query = page ? { ...data, page } : data;
         if (method === HTTP_METHOD.GET || method === HTTP_METHOD.DELETE) {
             res = await (
                 await fetch(
-                    `${API_HOST}${url}?${queryString.stringify(data)}`,
+                    `${API_HOST}${url}?${queryString.stringify(query)}`,
                     {
                         method: method,
                         headers: {
