@@ -2,8 +2,6 @@ import { API_STATUS, HTTP_METHOD } from "../config/common.jsx";
 import queryString from "query-string";
 
 const API_HOST = import.meta.env.VITE_API_HOST;
-
-
 export const makeRequest = async (
     method,
     url,

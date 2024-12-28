@@ -11,7 +11,7 @@ import AuthListener from './utils/AuthListener';
 import ProtectedRoute from './utils/ProtectedRoute';
 import RedirectIfAuthenticated from './utils/RedirectIfAuthenticated';
 import Search from './pages/Search';
-
+import ActorProfile from './pages/Actor';
 function App() {
 
   return (
@@ -34,6 +34,7 @@ function App() {
             </Route>
             <Route element={<ProtectedRoute />}>
               <Route path='/profile' element={<Profile />} />
+              <Route path='/actor/:id' element={<ActorProfile />} />
               <Route path='/search' element={<Search />} />
               <Route path='/movie/:id' element={<Movie />} />
               <Route path='*' element={<Profile />} />

@@ -27,6 +27,7 @@ const Home = () => {
 
   const fetchTrendingMovies = async (filter, page) => {
     const token = await user.getIdToken();
+    console.log(token);
     if (filter === 'today') {
       return await getTrendingMoviesByDay({ token, page });
     } else if (filter === 'this week') {
