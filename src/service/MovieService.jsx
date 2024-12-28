@@ -18,3 +18,10 @@ export const searchMovie = async ({keyword, token, page}) => {
     const data = {keyword}
     return makeRequest(HTTP_METHOD.GET, `${MOVIE_URI}/search`,data,true,token, page);
 }
+export const getMovieCast = async ({movieID, token}) => {
+    return makeRequest(HTTP_METHOD.GET, `${MOVIE_URI}/${movieID}/cast`, null, true, token);
+}
+
+export const getActorDetail = async ({actorID, token}) => {
+    return makeRequest(HTTP_METHOD.GET, `${MOVIE_URI}/actor/${actorID}`, null, true, token);
+}
