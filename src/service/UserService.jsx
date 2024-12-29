@@ -12,3 +12,15 @@ export const removeFavoriteMovie = async ({token, movieID}) => {
 export const getFavoriteMovie = async ({token, movieID}) => {
     return makeRequest(HTTP_METHOD.GET, `${USER_URL}/favorite/${movieID}`, null, true, token);
 }
+
+export const addWatchlistMovie = async ({token, movieID}) => {
+    return makeRequest(HTTP_METHOD.POST, `${USER_URL}/watchlist`, {movieID}, true, token);
+}
+
+export const removeWatchlistMovie = async ({token, movieID}) => {
+    return makeRequest(HTTP_METHOD.DELETE, `${USER_URL}/watchlist/${movieID}`, null, true, token);
+}
+
+export const getWatchlistMovie = async ({token, movieID}) => {
+    return makeRequest(HTTP_METHOD.GET, `${USER_URL}/watchlist/${movieID}`, null, true, token);
+}

@@ -13,7 +13,7 @@ import styles from './Profile.module.css';
 import { getMovieData } from '../service/MovieService'
 import { API_STATUS } from "../config/common.jsx";
 import VoteAverageCircle from '../components/VoteAverageCircle/index.jsx';
-import {addFavoriteMovie, removeFavoriteMovie, getFavoriteMovie} from '../service/UserService';
+import {addFavoriteMovie, removeFavoriteMovie, getFavoriteMovie, addWatchlistMovie, removeWatchlistMovie, getWatchlistMovie } from '../service/UserService';
 const Movie = () => {
     const { id } = useParams(); // Lấy ID từ URL param
     const user = useStore((state) => state.user);
@@ -60,6 +60,22 @@ const Movie = () => {
         checkFavorite();
     }, [id, user]);
     
+    useEffect(() => {
+        const checkWatchlist = async () => {
+            if (user) { 
+                const token = await user.getIdToken();
+                const response = await getWatchlistMovie({ token, movieID: id });
+                if (response && response.statusCode === 200 && response.data?.isWatchlist) {
+                    setIsWatchlist(true);
+                }
+                else {
+                    setIsWatchlist(false);
+                }
+            }
+        }
+        checkWatchlist();
+    }, [id, user]);
+
     const handleLogout = () => {
         signOut(auth);
         navigate('/login');
@@ -82,6 +98,26 @@ const Movie = () => {
             } 
         }
     }
+
+    const handleAddWatchlist = async () => {
+        if (user && movie) {
+            const token = await user.getIdToken();
+            const res = await addWatchlistMovie({ token, movieID: movie.id });
+            if(res && res.statusCode === 201){
+                setIsWatchlist(true);
+            }
+        }
+    }
+    const handleRemoveWatchlist = async () => {
+        if (user && movie) {
+            const token = await user.getIdToken();
+            const res = await removeWatchlistMovie({ token, movieID: movie.id });
+            if(res && res.statusCode === 200){
+                setIsWatchlist(false);
+            } 
+        }
+    }
+
     return (
         <div className={styles.container}>
             {user && movie ? (
@@ -193,8 +229,10 @@ const Movie = () => {
                                                     </Tooltip>
                                                     <Tooltip title={ user ? 'Add to your watchlist' : 'Login to add this movie to your watchlist'}>
                                                         <span>
-                                                        <IconButton className="bg-gray-800 text-white hover:bg-gray-700"  disabled={!user}>
-                                                        <BookmarkIcon sx={{ color: 'white' }}/>
+                                                        <IconButton className="bg-gray-800 text-white hover:bg-gray-700"  disabled={!user}
+                                                         onClick={ user && !isWatchlist ? async() => handleAddWatchlist()
+                                                            : async() => handleRemoveWatchlist() }>
+                                                        <BookmarkIcon sx={{ color: user && isWatchlist ? 'red' : 'white' }}/>
                                                     </IconButton>
                                                         </span>
                                                     </Tooltip>
