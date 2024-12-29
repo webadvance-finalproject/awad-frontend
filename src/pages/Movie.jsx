@@ -13,6 +13,7 @@ import styles from './Profile.module.css';
 import { getMovieData } from '../service/MovieService'
 import { API_STATUS } from "../config/common.jsx";
 import VoteAverageCircle from '../components/VoteAverageCircle/index.jsx';
+import RatingDialog from '../components/RatingDialog/index.jsx';
 import {addFavoriteMovie, removeFavoriteMovie, getFavoriteMovie, addWatchlistMovie, removeWatchlistMovie, getWatchlistMovie } from '../service/UserService';
 const Movie = () => {
     const { id } = useParams(); // Lấy ID từ URL param
@@ -22,6 +23,10 @@ const Movie = () => {
     const [cast, setCast] = useState([]); // State for cast
     const [isFavorite, setIsFavorite] = useState(false);
     const [isWatchlist, setIsWatchlist] = useState(false);
+    const [openRatingDialog, setOpenRatingDialog] = useState(false);
+    const [rating, setRating] = useState(0);
+    const handleOpen = () => setOpenRatingDialog(true);
+    const handleClose = () => setOpenRatingDialog(false);
     useEffect(() => {
         const fetchMovieData = async () => {
             if (id) {
@@ -31,6 +36,7 @@ const Movie = () => {
                     if (data && data.status !== API_STATUS.INTERNAL_ERROR) {
                         setMovie(data);
                         setCast(data?.credits?.cast);
+                        setRating(data?.vote_average);
                     }
                 } catch (error) {
                     console.error('Error fetching movie data:', error);
@@ -186,7 +192,7 @@ const Movie = () => {
                                                     <Box className="relative w-16 h-16 flex items-center justify-center rounded-full bg-green-500">
                                                     <Typography variant="h5" className="font-bold"  sx={{ color: 'white' }}>
                                                     <Box className="bg-gray-800 p-4">
-                                                        <VoteAverageCircle voteAverage={movie.vote_average} />
+                                                        <VoteAverageCircle voteAverage={rating} />
                                                     </Box>
                                                     </Typography>
                                                     <Button
@@ -201,9 +207,18 @@ const Movie = () => {
                                                               backgroundColor: '#333',
                                                             }
                                                           }}
+                                                          disabled={!user}
+                                                          onClick={user && handleOpen}
                                                     >
                                                         {"What's your Vibe?"}
                                                     </Button>
+                                                    <RatingDialog 
+                                                        open={openRatingDialog}
+                                                        onClose={handleClose}
+                                                        title={`What did you think of ${movie.title}?`}
+                                                        movieID={movie.id}
+                                                        setRating = {setRating}
+                                                    />
                                                     </Box>
 
                                                     {/* Action Buttons */}

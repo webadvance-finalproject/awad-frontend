@@ -27,7 +27,6 @@ const Home = () => {
 
   const fetchTrendingMovies = async (filter, page) => {
     const token = await user.getIdToken();
-    console.log(token);
     if (filter === 'today') {
       return await getTrendingMoviesByDay({ token, page });
     } else if (filter === 'this week') {
@@ -39,7 +38,6 @@ const Home = () => {
     const fetchMovies = async () => {
       try {
         const data = await fetchTrendingMovies(filter, page);
-        console.log(data);
         setMovies(prevMovies => [...prevMovies, ...data.results]);
         if (data.total_pages <= page) {
           setHasMore(false);
