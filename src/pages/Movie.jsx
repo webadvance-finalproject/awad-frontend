@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Box, Typography, Card, CardMedia, CardContent, Grid, Chip, Avatar } from '@mui/material'; // Import Avatar
+import { Box, Typography, Card, CardMedia, CardContent, Grid, Chip, Avatar, IconButton, Tooltip, Button  } from '@mui/material'; // Import 
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import InfoIcon from '@mui/icons-material/Info';
 import { useStore } from '../store'
 import { signOut } from 'firebase/auth';
 import { auth } from '../config/firebase';
@@ -8,14 +12,16 @@ import Header from "../components/Header";
 import styles from './Profile.module.css';
 import { getMovieData } from '../service/MovieService'
 import { API_STATUS } from "../config/common.jsx";
-
+import VoteAverageCircle from '../components/VoteAverageCircle/index.jsx';
+import {addFavoriteMovie, removeFavoriteMovie, getFavoriteMovie} from '../service/UserService';
 const Movie = () => {
     const { id } = useParams(); // Lấy ID từ URL param
     const user = useStore((state) => state.user);
     const navigate = useNavigate();
     const [movie, setMovie] = useState({})
     const [cast, setCast] = useState([]); // State for cast
-
+    const [isFavorite, setIsFavorite] = useState(false);
+    const [isWatchlist, setIsWatchlist] = useState(false);
     useEffect(() => {
         const fetchMovieData = async () => {
             if (id) {
@@ -23,7 +29,6 @@ const Movie = () => {
                     const token = await user.getIdToken();
                     const data = await getMovieData({ movieID: id, token });
                     if (data && data.status !== API_STATUS.INTERNAL_ERROR) {
-                        console.log(data);
                         setMovie(data);
                         setCast(data?.credits?.cast);
                     }
@@ -39,12 +44,44 @@ const Movie = () => {
             // Cleanup function (optional)
         };
     }, [id]);
-
+    useEffect(() => {
+        const checkFavorite = async () => {
+            if (user) { 
+                const token = await user.getIdToken();
+                const response = await getFavoriteMovie({ token, movieID: id });
+                if (response && response.statusCode === 200 && response.data?.isFavorite) {
+                    setIsFavorite(true);
+                }
+                else {
+                    setIsFavorite(false);
+                }
+            }
+        }
+        checkFavorite();
+    }, [id, user]);
+    
     const handleLogout = () => {
         signOut(auth);
         navigate('/login');
     }
-    
+    const handleAddFavorite = async () => {
+        if (user && movie) {
+            const token = await user.getIdToken();
+            const res = await addFavoriteMovie({ token, movieID: movie.id });
+            if(res && res.statusCode === 201){
+                setIsFavorite(true);
+            }
+        }
+    }
+    const handleRemoveFavorite = async () => {
+        if (user && movie) {
+            const token = await user.getIdToken();
+            const res = await removeFavoriteMovie({ token, movieID: movie.id });
+            if(res && res.statusCode === 200){
+                setIsFavorite(false);
+            } 
+        }
+    }
     return (
         <div className={styles.container}>
             {user && movie ? (
@@ -84,17 +121,15 @@ const Movie = () => {
                                     <Grid item xs={12} md={8}>
                                         <Card sx={{ backgroundColor: "transparent", border: "none", boxShadow: 'none' }}>
                                             <CardContent>
-                                                <Typography variant="h3" sx={{ color: 'white' }}>
-                                                    {movie.title} ({new Date(movie.release_date).getFullYear()})
-                                                </Typography>
-                                                <Typography variant="h6" color="textSecondary" sx={{ color: 'white' }} paragraph>
-                                                    Release Date: {movie.release_date}
-                                                </Typography>
-                                                <Typography variant="h6" color="textSecondary" sx={{ color: 'white' }}>
-                                                    Rating: {movie.vote_average} / 10
-                                                </Typography>
-                                                <Box sx={{ marginTop: 2 }}>
-                                                    <Typography variant="h6" sx={{ color: 'white' }}>Genres:</Typography>
+                                            <Box className="p-6 bg-gray-900 text-white">
+                                                {/* Title Section */}
+                                                <Box className="mb-4">
+                                                    <Typography variant="h4" component="h1" className="font-bold mb-2"  sx={{ color: 'white' }}>
+                                                        {movie.title} ({new Date(movie.release_date).getFullYear()})
+                                                    </Typography>
+                                                    <Box className="flex items-center gap-2 mb-2">
+                                                    
+                                                    <Typography variant="body2">
                                                     <Box>
                                                         {movie?.genres?.map((genre) => (
                                                             <Chip
@@ -105,12 +140,86 @@ const Movie = () => {
                                                             />
                                                         ))}
                                                     </Box>
-                                                </Box>
-                                                <Box sx={{ marginTop: 2 }}>
-                                                    <Typography variant="h6" sx={{ color: 'white' }}>Overview</Typography>
-                                                    <Typography variant="body1" paragraph sx={{ color: 'white' }}>
-                                                        {movie.overview}
                                                     </Typography>
+                                                    </Box>
+                                                </Box>
+
+                                                {/* Rating and Actions Section */}
+                                                <Box className="flex items-center gap-6 mb-6">
+                                                    {/* Score Circle */}
+                                                    <Box className="relative w-16 h-16 flex items-center justify-center rounded-full bg-green-500">
+                                                    <Typography variant="h5" className="font-bold"  sx={{ color: 'white' }}>
+                                                    <Box className="bg-gray-800 p-4">
+                                                        <VoteAverageCircle voteAverage={movie.vote_average} />
+                                                    </Box>
+                                                    </Typography>
+                                                    <Button
+                                                        endIcon={<InfoIcon />}
+                                                        sx={{
+                                                            backgroundColor: 'common.black',
+                                                            color: 'common.white',
+                                                            borderRadius: '50px',
+                                                            padding: '8px 16px',
+                                                            textTransform: 'none',
+                                                            '&:hover': {
+                                                              backgroundColor: '#333',
+                                                            }
+                                                          }}
+                                                    >
+                                                        {"What's your Vibe?"}
+                                                    </Button>
+                                                    </Box>
+
+                                                    {/* Action Buttons */}
+                                                    <Box className="flex gap-2" sx={{ marginTop: '2rem' }}>
+
+
+                                                    <Tooltip title={user ? 'Add to list' : 'Login to create and edit custom lists'}>
+                                                        <span>
+                                                        <IconButton className="bg-gray-800 text-white hover:bg-gray-700" disabled={!user}
+                                                       >
+                                                            <FormatListBulletedIcon  sx={{ color:'white'}}/>
+                                                        </IconButton>
+                                                        </span>
+                                                        </Tooltip>
+                                                    <Tooltip title={user ? 'Mark as favorite' : 'Login to add this movie to your favorite list'}>
+                                                        <span>
+                                                        <IconButton className="bg-gray-800 text-white hover:bg-gray-700"  disabled={!user}
+                                                         onClick={ user && !isFavorite ? async() => handleAddFavorite()
+                                                         : async() => handleRemoveFavorite() }>
+                                                        <FavoriteIcon  sx={{ color: user && isFavorite ? 'red' : 'white'}}/>
+                                                    </IconButton> 
+                                                        </span>
+                                                    </Tooltip>
+                                                    <Tooltip title={ user ? 'Add to your watchlist' : 'Login to add this movie to your watchlist'}>
+                                                        <span>
+                                                        <IconButton className="bg-gray-800 text-white hover:bg-gray-700"  disabled={!user}>
+                                                        <BookmarkIcon sx={{ color: 'white' }}/>
+                                                    </IconButton>
+                                                        </span>
+                                                    </Tooltip>
+                                                   
+                                                  
+                                                   
+                                                    {/* <Button
+                                                        variant="contained"
+                                                        startIcon={<PlayArrowIcon />}
+                                                        className="bg-gray-800 text-white hover:bg-gray-700"
+                                                    >
+                                                    </Button>
+                                                     */}
+                                                    </Box>
+                                                </Box>
+
+                                                {/* Overview Section */}
+                                                <Box>
+                                                    <Typography variant="h6" className="mb-2"  sx={{ color: 'white' }}>
+                                                    Overview
+                                                    </Typography>
+                                                    <Typography variant="body1"  sx={{ color: 'white' }}>
+                                                    {movie.overview}
+                                                    </Typography>
+                                                </Box>
                                                 </Box>
                                                 {/* Cast */}
                                                 <Box sx={{ marginTop: 2 }}>

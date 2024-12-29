@@ -97,7 +97,7 @@ const navigate = useNavigate();
                           {actor.name}
                         </Typography>
                         <Typography color="text.secondary">
-                          Birthday: {actor.birthday}
+                          Birthday: {new Date(actor.birthday)?.toLocaleDateString('en-GB')}
                         </Typography>
                         <Typography color="text.secondary">
                           Place of Birth: {actor.place_of_birth}
@@ -160,9 +160,6 @@ const navigate = useNavigate();
                               </Typography>
                               <Typography variant="body2" color="text.secondary">
                                 as {movie.character}
-                              </Typography>
-                              <Typography variant="body2" color="text.secondary">
-                                {movie.overview}
                               </Typography>
                             </Box>
                           </Paper>
