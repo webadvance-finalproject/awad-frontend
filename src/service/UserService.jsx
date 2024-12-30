@@ -32,3 +32,11 @@ export const addRatingMovie = async ({token, movieID, rating}) => {
 export const getRatingMovie = async ({token, movieID}) => {
     return makeRequest(HTTP_METHOD.GET, `${USER_URL}/rating/${movieID}`, null, true, token);
 }
+
+export const addReviewMovie = async ({token, movieID, review}) => {
+    return makeRequest(HTTP_METHOD.POST, `${USER_URL}/review`, {movieID, review}, true, token);
+}
+
+export const getReviewMovie = async ({token = '', movieID}) => {
+    return makeRequest(HTTP_METHOD.GET, `${USER_URL}/review/${movieID}`, null, true, token);
+}

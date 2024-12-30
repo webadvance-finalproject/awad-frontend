@@ -14,7 +14,9 @@ import { getMovieData } from '../service/MovieService'
 import { API_STATUS } from "../config/common.jsx";
 import VoteAverageCircle from '../components/VoteAverageCircle/index.jsx';
 import RatingDialog from '../components/RatingDialog/index.jsx';
-import {addFavoriteMovie, removeFavoriteMovie, getFavoriteMovie, addWatchlistMovie, removeWatchlistMovie, getWatchlistMovie } from '../service/UserService';
+import ReviewList from '../components/Review/index.jsx';
+import {addFavoriteMovie, removeFavoriteMovie, getFavoriteMovie, addWatchlistMovie, removeWatchlistMovie, getWatchlistMovie, getReviewMovie } from '../service/UserService';
+
 const Movie = () => {
     const { id } = useParams(); // Lấy ID từ URL param
     const user = useStore((state) => state.user);
@@ -25,6 +27,17 @@ const Movie = () => {
     const [isWatchlist, setIsWatchlist] = useState(false);
     const [openRatingDialog, setOpenRatingDialog] = useState(false);
     const [rating, setRating] = useState(0);
+    const [reviews, setReviews] = useState([]);
+    const handleAddReview = (review) => {
+        if(!reviews)
+        {
+            setReviews([review]);
+        }
+        else
+        {
+            setReviews((prev) => [...prev, review]);
+        }
+    };
     const handleOpen = () => setOpenRatingDialog(true);
     const handleClose = () => setOpenRatingDialog(false);
     useEffect(() => {
@@ -50,6 +63,22 @@ const Movie = () => {
             // Cleanup function (optional)
         };
     }, [id]);
+    useEffect(() => {
+        const fetchReviews = async () => {
+            if (id) {
+                try {
+                    const data = await getReviewMovie({ movieID: id });
+                    console.log(data);
+                    if (data && data.statusCode === 200) {
+                        setReviews(data?.data?.review);
+                    }
+                } catch (error) {
+                    console.error('Error fetching reviews:', error);
+                }
+            }
+        }
+        fetchReviews();
+    }, [user, id]);
     useEffect(() => {
         const checkFavorite = async () => {
             if (user) { 
@@ -223,16 +252,6 @@ const Movie = () => {
 
                                                     {/* Action Buttons */}
                                                     <Box className="flex gap-2" sx={{ marginTop: '2rem' }}>
-
-
-                                                    <Tooltip title={user ? 'Add to list' : 'Login to create and edit custom lists'}>
-                                                        <span>
-                                                        <IconButton className="bg-gray-800 text-white hover:bg-gray-700" disabled={!user}
-                                                       >
-                                                            <FormatListBulletedIcon  sx={{ color:'white'}}/>
-                                                        </IconButton>
-                                                        </span>
-                                                        </Tooltip>
                                                     <Tooltip title={user ? 'Mark as favorite' : 'Login to add this movie to your favorite list'}>
                                                         <span>
                                                         <IconButton className="bg-gray-800 text-white hover:bg-gray-700"  disabled={!user}
@@ -285,6 +304,9 @@ const Movie = () => {
                                                             </Box>
                                                         ))}
                                                     </Box>
+                                                </Box>
+                                                <Box sx={{ marginTop: 2 }}>
+                                                    <ReviewList reviews={reviews} onAddReview={handleAddReview} movieID = {movie.id}/>
                                                 </Box>
                                             </CardContent>
                                         </Card>
