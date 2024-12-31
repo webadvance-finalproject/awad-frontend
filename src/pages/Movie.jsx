@@ -15,8 +15,8 @@ import { API_STATUS } from "../config/common.jsx";
 import VoteAverageCircle from '../components/VoteAverageCircle/index.jsx';
 import RatingDialog from '../components/RatingDialog/index.jsx';
 import ReviewList from '../components/Review/index.jsx';
-import {addFavoriteMovie, removeFavoriteMovie, getFavoriteMovie, addWatchlistMovie, removeWatchlistMovie, getWatchlistMovie, getReviewMovie } from '../service/UserService';
-
+import {addFavoriteMovie, removeFavoriteMovie, getFavoriteMovie, addWatchlistMovie, removeWatchlistMovie, getWatchlistMovie, getReviewMovie, getSimilarMovies, getRecommendMovies } from '../service/UserService';
+import Recommendations from '../components/Recommendations/index.jsx';
 const Movie = () => {
     const { id } = useParams(); // Lấy ID từ URL param
     const user = useStore((state) => state.user);
@@ -28,6 +28,8 @@ const Movie = () => {
     const [openRatingDialog, setOpenRatingDialog] = useState(false);
     const [rating, setRating] = useState(0);
     const [reviews, setReviews] = useState([]);
+    const [recommendations, setRecommendations] = useState([]);
+    const [forYouMovies, setForYouMovies] = useState([]);
     const handleAddReview = (review) => {
         if(!reviews)
         {
@@ -62,7 +64,7 @@ const Movie = () => {
         return () => {
             // Cleanup function (optional)
         };
-    }, [id]);
+    }, [id, user]);
     useEffect(() => {
         const fetchReviews = async () => {
             if (id) {
@@ -109,6 +111,43 @@ const Movie = () => {
             }
         }
         checkWatchlist();
+    }, [id, user]);
+
+    useEffect(() => {
+        const fetchSimilarMovies = async () => {
+            if (id) {
+                try {
+                    const token = await user.getIdToken();
+                    const data = await getSimilarMovies({ token, movieID: id });
+                    if(data && data.statusCode === 200 && data.data?.similarMovies){
+                        setRecommendations(data.data.similarMovies);
+                    }
+                } catch (error) {
+                    console.error('Error fetching similar movies:', error);
+                    setRecommendations([])
+                }
+            }
+        }
+        fetchSimilarMovies();
+    }, [id, user]);
+
+    useEffect(() => {
+        const fetchRecommendMovies = async () => {
+            if (id) {
+                try {
+                    const token = await user.getIdToken();
+                    const data = await getRecommendMovies({ token, movieID: id });
+                    console.log(data);
+                    if(data && data.statusCode === 200 && data.data?.similarMovies){
+                        setForYouMovies(data.data?.similarMovies);
+                    }
+                } catch (error) {
+                    console.error('Error fetching recommend movies:', error);
+                    setForYouMovies([])
+                }
+            }
+        }
+        fetchRecommendMovies();
     }, [id, user]);
 
     const handleLogout = () => {
@@ -305,14 +344,24 @@ const Movie = () => {
                                                         ))}
                                                     </Box>
                                                 </Box>
-                                                <Box sx={{ marginTop: 2 }}>
-                                                    <ReviewList reviews={reviews} onAddReview={handleAddReview} movieID = {movie.id}/>
-                                                </Box>
                                             </CardContent>
                                         </Card>
                                     </Grid>
                                 </Grid>
                             </Box>
+                            <Box sx={{ marginTop: 2 }}>
+                                <ReviewList reviews={reviews} onAddReview={handleAddReview} movieID = {movie.id}/>
+                            </Box>
+                            {recommendations && recommendations.length > 0 && (
+                                <Box sx={{ marginTop: 2 }}>
+                                    <Recommendations recommendations={recommendations} title={'Recommendations'} />
+                                </Box>
+                                )}
+                            {forYouMovies && forYouMovies.length > 0 && (
+                                <Box sx={{ marginTop: 2 }}>
+                                    <Recommendations recommendations={forYouMovies} title={'For you'} />
+                                </Box>
+                                )}
                         </Box>
                     )}
                 </div>

@@ -40,3 +40,11 @@ export const addReviewMovie = async ({token, movieID, review}) => {
 export const getReviewMovie = async ({token = '', movieID}) => {
     return makeRequest(HTTP_METHOD.GET, `${USER_URL}/review/${movieID}`, null, true, token);
 }
+
+export const getSimilarMovies = async ({token = '', movieID}) => {
+    return makeRequest(HTTP_METHOD.GET, `${USER_URL}/similar/${movieID}`, null, true, token);
+}
+
+export const getRecommendMovies = async({token}) => {
+    return makeRequest(HTTP_METHOD.GET, `${USER_URL}/similar`, null, true, token);
+}
