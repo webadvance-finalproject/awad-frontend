@@ -9,8 +9,8 @@ import { getTrendingMoviesByDay, getTrendingMoviesByWeek } from '../service/Movi
 import { ImageList } from '@mui/material';
 import { ButtonGroup, Button } from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import SearchBar from '../components/SearchBar';
 import MovieItem from '../components/MovieItem';
+import SearchWithFilter from '../components/SearchWithFilter/index.jsx'
 
 const Home = () => {
   const user = useStore((state) => state.user);
@@ -65,7 +65,7 @@ const Home = () => {
     <div className={styles.container}>
       <Header handleLogout={handleLogout} />
       <div style={{padding: "0 40px"}}>
-        <SearchBar/>
+        <SearchWithFilter/>
       </div>
       <div style={{ margin: '40px' }}>
         <ButtonGroup exclusive="true" sx={{ marginBlock: '10px' }}>
