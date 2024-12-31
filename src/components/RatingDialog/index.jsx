@@ -37,7 +37,7 @@ const ClearButton = styled(Button)`
 `;
 
 const getTrackBackground = (value) => {
-  const percentage = Math.min(Math.max(value, 0), 100); // Đảm bảo giá trị nằm trong khoảng 0-100
+  const percentage = Math.min(Math.max(value, 0), 100);
   return `linear-gradient(90deg, #FFE234 0%, #00A3FF ${percentage}%, #E2E8F0 ${percentage}%)`;
 };
 
