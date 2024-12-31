@@ -6,7 +6,6 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../config/firebase';
 import Header from "../components/Header";
 import styles from './Profile.module.css';
-import SearchBar from '../components/SearchBar';
 const Profile = () => {
     const user = useStore((state) => state.user);
     const navigate = useNavigate();
