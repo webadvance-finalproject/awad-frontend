@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import Container from '@mui/material/Container'
 import { Box } from '@mui/material'
 import Card from '@mui/material/Card'
 import Typography from '@mui/material/Typography'
@@ -10,7 +9,6 @@ import * as yup from 'yup'
 import { auth } from '../../config/firebase'
 import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, sendEmailVerification } from 'firebase/auth'
 import {useNavigate, Link} from 'react-router-dom'
-import { useStore } from '../../store'
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -99,14 +97,26 @@ const Login = () => {
                         {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
                     </Button>
                 </form>
-                <Typography variant='subtitle1' sx={{margin: '5px'}}>Chưa có tài khoản?
-                    <Link to='/register'>Đăng ký</Link>
+                <Typography 
+                    variant='subtitle1' 
+                    sx={{
+                        margin: '5px',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
+                    }}
+                >
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        Chưa có tài khoản?
+                        &nbsp;<Link to='/register'>Đăng ký</Link>
+                    </Box>
+                    <Link to='/forgot-password'>Lấy lại mật khẩu</Link>&nbsp;
                 </Typography>
             <Button 
                 variant="contained" 
                 color="primary" 
                 fullWidth 
-                sx={{ mt: '15px' }}
+                sx={{ mt: '20px' }}
                 onClick={handleGoogleLogin}
                 startIcon={<GoogleIcon />}
             >
