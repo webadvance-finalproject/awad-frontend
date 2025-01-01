@@ -6,7 +6,7 @@ import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import * as yup from 'yup'
 import { auth } from '../../config/firebase'
-import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth'
 import {useNavigate, Link} from 'react-router-dom'
 
 const SignUp = () => {
@@ -27,7 +27,8 @@ const SignUp = () => {
         try {
             await validationSchema.validate({ email, password });
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            navigate('/login')
+            await sendEmailVerification(userCredential.user);
+            navigate('/login?email_verified=false')
         } catch (error) {
             // Xử lý lỗi
             console.log(error);
