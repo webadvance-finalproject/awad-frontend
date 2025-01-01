@@ -4,8 +4,8 @@ import { useStore } from '../store';
 
 const RedirectIfAuthenticated = () => {
     const user = useStore(state => state.user);
-    if (user) {
-        return <Navigate to="/profile" replace />;
+    if (user && user.emailVerified) {
+        return <Navigate to="/movie" replace />;
     }
 
     return <Outlet />;

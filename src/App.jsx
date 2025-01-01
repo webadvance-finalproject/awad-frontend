@@ -3,7 +3,7 @@ import SignUp from './pages/auth/SignUp'
 import Login from './pages/auth/Login'
 import Logout from './pages/auth/Logout';
 import Container from '@mui/material/Container'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Profile from './pages/Profile';
 import Home from './pages/Home';
 import Movie from './pages/Movie';
@@ -28,18 +28,18 @@ function App() {
           }} >
           <Routes>
             <Route path='/' element={<Home />} />
+            <Route path='/actor/:id' element={<ActorProfile />} />
+            <Route path='/search' element={<Search />} />
+            <Route path='/movie/:id' element={<Movie />} />
+            <Route path='*' element={<Navigate to="/" replace />} />
+            <Route path='/logout' element={<Logout />} />
             <Route element={<RedirectIfAuthenticated />} >
               <Route path='/register' element={<SignUp />} />
               <Route path='/login' element={<Login />} />
             </Route>
             <Route element={<ProtectedRoute />}>
               <Route path='/profile' element={<Profile />} />
-              <Route path='/actor/:id' element={<ActorProfile />} />
-              <Route path='/search' element={<Search />} />
-              <Route path='/movie/:id' element={<Movie />} />
-              <Route path='*' element={<Profile />} />
             </Route>
-            <Route path='/logout' element={<Logout />} />
           </Routes>
         </Container>
       </AuthListener>

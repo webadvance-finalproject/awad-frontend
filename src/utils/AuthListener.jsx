@@ -15,9 +15,7 @@ const AuthListener = ({children}) => {
       if (user) {
         setUser(user);
       } else {
-        console.log("not signed in");
         setUser(null);
-        navigate('/login');
       }
       setIsLoading(false);
     });
