@@ -40,7 +40,7 @@ function CustomTabPanel(props) {
             aria-labelledby={`simple-tab-${index}`}
             {...other}
         >
-            {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+            {value === index && <Box sx={{ p: '1.875rem' }}>{children}</Box>}
         </div>
     );
 }
@@ -144,17 +144,21 @@ const Profile = () => {
                         spacing={2}
                         sx={{
                             backgroundImage: 'linear-gradient(to bottom, #032541, #5f1339)',
-                            padding: '30px',
-                            borderRadius: '0px 0px 10px 10px',
-                            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                            padding: '3.125rem 6.25rem',
+                            borderRadius: '0 0 0.625rem 0.625rem',
+                            boxShadow: '0 0.25rem 0.5rem rgba(0, 0, 0, 0.1)',
                             color: '#bcbcc2',
                         }}
                     >
                         <Stack>
-                            <Avatar src={user.photoURL} alt={user.displayName} sx={{ width: 110, height: 110, border: '2px solid white' }} />
+                            <Avatar src={user.photoURL} alt={user.displayName} sx={{ width: '9.375rem', height: '9.375rem', border: '0.125rem solid white' }} />
                         </Stack>
                         <Stack
                             spacing={2}
+                            sx={{
+                                alignItems: 'flex-start',
+                                justifyContent: 'center',
+                            }}
                         >
                             <Stack
                                 direction="row"
@@ -191,7 +195,7 @@ const Profile = () => {
                     </Stack>
                     <Box sx={{ width: '100%' }}>
 
-                        <Box sx={{ borderBottom: 1, borderColor: 'divider', alignItems: 'center', justifyContent: 'center', display: 'flex' }}>
+                        <Box sx={{ borderBottom: '0.0625rem', borderColor: 'divider', alignItems: 'center', justifyContent: 'center', display: 'flex' }}>
                             <Tabs value={tab} onChange={handleTabChange} aria-label="basic tabs example">
                                 <Tab label="Watchlist" {...a11yProps(0)} />
                                 <Tab label="Favorites" {...a11yProps(1)} />
@@ -199,27 +203,33 @@ const Profile = () => {
                             </Tabs>
                         </Box>
                         
-                        <CustomTabPanel value={tab} index={0}>
-                            <ImageList cols={7} sx={{ justifyContent: 'center', margin: '0' }}>
-                                {watchlists.map((item) => (
-                                    <MovieItem key={item.movie._id} item={item.movie} />
-                                ))}
-                            </ImageList>
-                        </CustomTabPanel>
-                        <CustomTabPanel value={tab} index={1}>
-                            <ImageList cols={7} sx={{ justifyContent: 'center', margin: '0' }}>
-                                {favorites.map((item) => (
-                                    <MovieItem key={item.movie._id} item={item.movie} />
-                                ))}
-                            </ImageList>
-                        </CustomTabPanel>
-                        <CustomTabPanel value={tab} index={2}>
-                            <ImageList cols={7} sx={{ justifyContent: 'center', margin: '0' }}>
-                                {ratings.map((item) => (
-                                    <MovieItem key={item.movie._id} item={item.movie} />
-                                ))}
-                            </ImageList>
-                        </CustomTabPanel>
+                        <Box
+                            sx={{
+                                paddingInline: '6.25rem',
+                            }}
+                        >
+                            <CustomTabPanel value={tab} index={0}>
+                                <ImageList cols={7} sx={{ justifyContent: 'center', margin: '0' }}>
+                                    {watchlists.map((item) => (
+                                        <MovieItem key={item.movie._id} item={item.movie} />
+                                    ))}
+                                </ImageList>
+                            </CustomTabPanel>
+                            <CustomTabPanel value={tab} index={1}>
+                                <ImageList cols={7} sx={{ justifyContent: 'center', margin: '0' }}>
+                                    {favorites.map((item) => (
+                                        <MovieItem key={item.movie._id} item={item.movie} />
+                                    ))}
+                                </ImageList>
+                            </CustomTabPanel>
+                            <CustomTabPanel value={tab} index={2}>
+                                <ImageList cols={7} sx={{ justifyContent: 'center', margin: '0' }}>
+                                    {ratings.map((item) => (
+                                        <MovieItem key={item.movie._id} item={item.movie} />
+                                    ))}
+                                </ImageList>
+                            </CustomTabPanel>
+                        </Box>
 
                         {error &&
                             <Typography
