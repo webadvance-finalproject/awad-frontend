@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store'
 import { signOut } from 'firebase/auth';
 import { auth } from '../config/firebase';
+import PropTypes from 'prop-types';
 
 // service
 import { getRatings } from '../service/UserService';
@@ -12,11 +13,41 @@ import {
     Avatar,
     Stack,
     Typography,
-    Box
+    Box,
+    Tabs,
+    Tab,
 } from '@mui/material';
 import styles from './Profile.module.css';
 import Header from "../components/Header";
 import VoteAverageCircle from '../components/VoteAverageCircle';
+
+// tabs
+CustomTabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.number.isRequired,
+    value: PropTypes.number.isRequired,
+};
+function CustomTabPanel(props) {
+    const { children, value, index, ...other } = props;
+
+    return (
+        <div
+            role="tabpanel"
+            hidden={value !== index}
+            id={`simple-tabpanel-${index}`}
+            aria-labelledby={`simple-tab-${index}`}
+            {...other}
+        >
+            {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+        </div>
+    );
+}
+function a11yProps(index) {
+    return {
+        id: `simple-tab-${index}`,
+        'aria-controls': `simple-tabpanel-${index}`,
+    };
+}
 
 const Profile = () => {
     const user = useStore((state) => state.user);
@@ -28,6 +59,12 @@ const Profile = () => {
         signOut(auth);
         navigate('/login');
     }
+
+    // tabs
+    const [tab, setTab] = useState(0);
+    const handleTabChange = (event, newValue) => {
+        setTab(newValue);
+    };
 
     useEffect(() => {
         const fetchRatings = async () => {
@@ -97,6 +134,24 @@ const Profile = () => {
                             </Stack>
                         </Stack>
                     </Stack>
+                    <Box sx={{ width: '100%' }}>
+                        <Box sx={{ borderBottom: 1, borderColor: 'divider', alignItems: 'center', justifyContent: 'center', display: 'flex' }}>
+                            <Tabs value={tab} onChange={handleTabChange} aria-label="basic tabs example">
+                                <Tab label="Watchlist" {...a11yProps(0)} />
+                                <Tab label="Favourites" {...a11yProps(1)} />
+                                <Tab label="Ratings" {...a11yProps(2)} />
+                            </Tabs>
+                        </Box>
+                        <CustomTabPanel value={tab} index={0}>
+                            Watchlist
+                        </CustomTabPanel>
+                        <CustomTabPanel value={tab} index={1}>
+                            Favourites
+                        </CustomTabPanel>
+                        <CustomTabPanel value={tab} index={2}>
+                            Ratings
+                        </CustomTabPanel>
+                    </Box>
                 </div>
             ) : (
                 <div>Loading...</div>
