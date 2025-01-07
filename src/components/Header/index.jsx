@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
-  AppBar,
   Toolbar,
   Button,
+  Avatar,
+  Stack,
 } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login'
@@ -66,17 +67,28 @@ const Header = ({ handleLogout }) => {
 
         {/* Logout Button */}
         {
-          user ? <Button
-            color="inherit"
-            startIcon={<LogoutIcon />}
-            onClick={handleLogout}
-            className={styles.logoutButton}
-            sx={
-              { marginRight: '1em' }
-            }
-          >
-            Logout
-          </Button>
+          user ?
+            <Stack
+              direction="row"
+              spacing={2}
+              sx={
+                { marginRight: '1em' }
+              }
+            >
+              <Avatar
+                onClick={() => { navigate('/profile') }}
+                src={`${user.photoURL}`}
+                sx={{ cursor: 'pointer' }}
+              />
+              <Button
+                color="inherit"
+                startIcon={<LogoutIcon />}
+                onClick={handleLogout}
+                className={styles.logoutButton}
+              >
+                Logout
+              </Button>
+            </Stack>
           :
           <Button
             color="inherit"
