@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import Filter from './Filter'
 import SearchBar from './SearchBar'
 import { useNavigate } from 'react-router-dom'
@@ -12,9 +12,9 @@ const SearchWithFilter = ({setIsLoading}) => {
         keyword: searchParams.get('keyword') || '',
         actors: searchParams.get('actors') ? searchParams.get('actors').split(',') : [],
         genres: searchParams.get('genres') || '',
-        minRating: searchParams.get('minRating') || null,
-        maxRating: searchParams.get('maxRating') || null,
-        minYear: searchParams.get('minYear') || null,
+        minRating: searchParams.get('minRating') || '',
+        maxRating: searchParams.get('maxRating') || '',
+        minYear: searchParams.get('minYear') || '',
         llm: searchParams.get('llm') || false,
     });
 
