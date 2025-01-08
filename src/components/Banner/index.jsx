@@ -44,7 +44,7 @@ const Banner = () => {
       sx={{
         background: 'linear-gradient(90deg, #02a6e7, #016b9e)',
         color: 'white',
-        px: '20rem',
+        px: '20vh',
       }}
     >
       <Typography variant="h2" component="div" margin={0} gutterBottom>
