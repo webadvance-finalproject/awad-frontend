@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../store';
 import { signOut } from 'firebase/auth';
@@ -6,6 +6,7 @@ import { auth } from '../config/firebase';
 import Header from '../components/Header'
 import Banner from '../components/Banner';
 import DayWeekSwitch from '../components/DayWeekSwitch';
+import MovieList from '../components/MovieList';
 import styles from './Profile.module.css';
 import { getTrendingMoviesByDay, getTrendingMoviesByWeek } from '../service/MovieService';
 import { Stack, Typography } from '@mui/material';
@@ -14,27 +15,54 @@ const Home = () => {
   const navigate = useNavigate();
   const user = useStore((state) => state.user);
   const [mode, setMode] = useState('day'); // day or week
+  const [trendingMovies, setTrendingMovies] = useState({
+    movies: [],
+    page: 1,
+    total_pages: 0,
+  });
 
   const handleLogout = () => {
     signOut(auth);
     navigate('/login');
   }
-
-  const fetchTrendingMovies = async (filter, page) => {
-    const token = await user.getIdToken();
-    if (filter === 'today') {
-      return await getTrendingMoviesByDay({ token, page });
-    } else if (filter === 'this week') {
-      return await getTrendingMoviesByWeek({ token, page });
-    }
-  }
   
-  const handleModeChange = (newMode) => {
+  const handleModeChange = () => {
+    const newMode = mode === 'day' ? 'week' : 'day';
+    setTrendingMovies({
+      movies: [],
+      page: 1,
+      total_pages: 0,
+    });
     setMode(newMode);
-    console.log('Old mode:', mode); 
-    console.log(`Switched to ${newMode}`); 
   };
-
+  
+  const fetchTrendingMovies = async (mode, page) => { 
+    try {
+      const token = await user.getIdToken();
+      if (mode === 'day') {
+        const res = await getTrendingMoviesByDay({ token, page });
+        console.log(res);
+        setTrendingMovies({
+          movies: res.results,
+          total_pages: res.total_pages,
+        });
+        return res;
+      } else if (mode === 'week') {
+        const res = await getTrendingMoviesByWeek({ token, page });
+        console.log(res);
+        setTrendingMovies({
+          movies: res.results,
+          total_pages: res.total_pages,
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching trending movies:", error);
+    }
+  };
+  
+  useEffect(() => {
+    fetchTrendingMovies(mode, trendingMovies.page); 
+  }, [mode]);
 
   return (
     <div className={styles.container}>
@@ -50,9 +78,14 @@ const Home = () => {
             }}
           >
             <Typography variant="h5">Trending</Typography>
-            <DayWeekSwitch onChange={handleModeChange} />
+            <DayWeekSwitch onChange={() => { handleModeChange }} />
           </Stack>
-          <p>Movie list with pagination</p>
+          <MovieList 
+            movies={trendingMovies.movies} 
+            totalPages={trendingMovies.total_pages} 
+            page={trendingMovies.page} 
+            onPageChange={(event, value) => {setTrendingMovies({ ...trendingMovies, page: value })}} 
+          />
         </Stack>
         <Stack>
           <Typography variant="h5">Latest Trailers</Typography>
