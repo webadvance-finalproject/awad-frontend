@@ -49,6 +49,7 @@ const SearchWithFilter = ({setIsLoading}) => {
                     const searchByLlmData = data?.data?.searchByLlmData?.data;
                     if(!searchByLlmData)
                     {
+                        setIsLoading(false);
                         navigate(`/search?${queryParams.toString()}`);
                     }
                     switch (searchByLlmData.route)
@@ -58,10 +59,12 @@ const SearchWithFilter = ({setIsLoading}) => {
                                 const movieID = searchByLlmData?.params?.movie_ids[0];
                                 if(movieID)
                                 {
+                                    setIsLoading(false);
                                     navigate(`/movie/cast/${movieID}`);
                                 }
                                 else
                                 {
+                                    setIsLoading(false);
                                     navigate(`/search?${queryParams.toString()}`);
                                 }
                                 break;
@@ -71,36 +74,43 @@ const SearchWithFilter = ({setIsLoading}) => {
                                 const movieID = searchByLlmData.params?.movie_ids[0];
                                 if(movieID)
                                 {
+                                    setIsLoading(false);
                                     navigate(`/movie/${movieID}`);
                                 }
                                 else
                                 {
+                                    setIsLoading(false);
                                     navigate(`/search?${queryParams.toString()}`);
                                 }
                                 break;
                             }
                         case "GENRE_PAGE":
                             {
+                                setIsLoading(false);
                                 navigate(`/search?${queryParams.toString()}`);
                                 break;
                             }
                         case "SEARCH_PAGE":
                             {
+                                setIsLoading(false);
                                 navigate(`/search?${queryParams.toString()}`);
                                 break;
                             }
                         case "PROFILE_PAGE":
                             {
+                                setIsLoading(false);
                                 navigate(`/search?${queryParams.toString()}`);
                                 break;
                             }
                         case "HOME_PAGE":
                             {
+                                setIsLoading(false);
                                 navigate(`/`);
                                 break;
                             }
                         default:{
-                            navigate(`/`);
+                            setIsLoading(false);
+                            navigate(`/search?${queryParams.toString()}`);
                             break;
                         }
                     }

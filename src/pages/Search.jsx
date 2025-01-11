@@ -74,7 +74,7 @@ const Search = () => {
     <div className={styles.container}>
       <Header handleLogout={handleLogout} />
       <div style={{ padding: "0 40px" }}>
-        <SearchWithFilter />
+        <SearchWithFilter setIsLoading={setIsLoading} />
       </div>
       {!isLoading ?
         <div style={{ margin: '40px' }}>
