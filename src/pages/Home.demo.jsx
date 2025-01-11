@@ -14,8 +14,8 @@ import { Stack, Typography } from '@mui/material';
 const Home = () => {
   const navigate = useNavigate();
   const user = useStore((state) => state.user);
-  const [mode, setMode] = useState('day'); // day or week
   const [trendingMovies, setTrendingMovies] = useState({
+    mode: 'day', // day or week
     movies: [],
     page: 1,
     total_pages: 0,
@@ -25,44 +25,62 @@ const Home = () => {
     signOut(auth);
     navigate('/login');
   }
-  
-  const handleModeChange = () => {
-    const newMode = mode === 'day' ? 'week' : 'day';
-    setTrendingMovies({
-      movies: [],
-      page: 1,
-      total_pages: 0,
-    });
-    setMode(newMode);
+
+  const handleTrendingPageChange = async (event, value) => {
+    const res = await fetchTrendingMovies(trendingMovies.mode, value);
+    setTrendingMovies(prevState => ({
+      ...prevState,
+      movies: res.results,
+      page: value,
+      total_pages: res.total_pages,
+    }));
   };
-  
-  const fetchTrendingMovies = async (mode, page) => { 
+
+  const handleModeChange = async () => {
+    const newMode = trendingMovies.mode === 'day' ? 'week' : 'day';
+    const newPage = 1;
+    const res = await fetchTrendingMovies(newMode, newPage);
+    console.log('res:', res);
+    setTrendingMovies(prevState => ({
+      ...prevState,
+      movies: res.results,
+      mode: newMode,
+      page: newPage,
+      total_pages: res.total_pages,
+    }));
+  };
+
+  const fetchTrendingMovies = async (mode, page) => {
     try {
       const token = await user.getIdToken();
-      if (mode === 'day') {
-        const res = await getTrendingMoviesByDay({ token, page });
-        console.log(res);
-        setTrendingMovies({
-          movies: res.results,
-          total_pages: res.total_pages,
-        });
-        return res;
-      } else if (mode === 'week') {
-        const res = await getTrendingMoviesByWeek({ token, page });
-        console.log(res);
-        setTrendingMovies({
-          movies: res.results,
-          total_pages: res.total_pages,
-        });
-      }
+      const res = mode === 'day'
+        ? await getTrendingMoviesByDay({ token, page })
+        : await getTrendingMoviesByWeek({ token, page });
+      // TODO: xử lý mã lỗi trả về từ server
+      return res;
     } catch (error) {
       console.error("Error fetching trending movies:", error);
     }
   };
-  
+
   useEffect(() => {
-    fetchTrendingMovies(mode, trendingMovies.page); 
-  }, [mode]);
+    const fetchInitialTrendingMovies = async () => {
+      const res = await fetchTrendingMovies(trendingMovies.mode, trendingMovies.page);
+      if (res) {
+        setTrendingMovies(prevState => ({
+          ...prevState,
+          movies: res.results,
+          total_pages: res.total_pages,
+        }));
+      }
+    };
+
+    fetchInitialTrendingMovies();
+  }, []);
+
+  useEffect(() => {
+    console.log('trendingMovies:', trendingMovies);
+  }, [trendingMovies]);
 
   return (
     <div className={styles.container}>
@@ -70,21 +88,15 @@ const Home = () => {
       <Banner />
       <Stack spacing={2} sx={{ paddingInline: '20vh', marginTop: '20px' }}>
         <Stack>
-          <Stack
-            direction="row"
-            spacing={3}
-            sx={{
-              alignItems: 'center',
-            }}
-          >
+          <Stack spacing={3} direction="row" sx={{ alignItems: 'center' }}>
             <Typography variant="h5">Trending</Typography>
-            <DayWeekSwitch onChange={() => { handleModeChange }} />
+            <DayWeekSwitch onChange={handleModeChange} />
           </Stack>
-          <MovieList 
-            movies={trendingMovies.movies} 
-            totalPages={trendingMovies.total_pages} 
-            page={trendingMovies.page} 
-            onPageChange={(event, value) => {setTrendingMovies({ ...trendingMovies, page: value })}} 
+          <MovieList
+            movies={trendingMovies.movies}
+            totalPages={trendingMovies.total_pages}
+            page={trendingMovies.page}
+            onPageChange={handleTrendingPageChange}
           />
         </Stack>
         <Stack>
