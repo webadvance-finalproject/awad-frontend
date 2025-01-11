@@ -19,12 +19,11 @@ const Search = () => {
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-
+  
   const handleLogout = () => {
     signOut(auth);
     navigate('/login');
   }
-
   const getSearchMovie = async (page) => {
     const token = await user.getIdToken();
     const paramsData = {

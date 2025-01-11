@@ -11,6 +11,7 @@ import { ButtonGroup, Button } from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import MovieItem from '../components/MovieItem';
 import SearchWithFilter from '../components/SearchWithFilter/index.jsx'
+import { CircularProgress, Box } from '@mui/material';
 
 const Home = () => {
   const user = useStore((state) => state.user);
@@ -18,6 +19,7 @@ const Home = () => {
   const [filter, setFilter] = useState('today');
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -65,13 +67,14 @@ const Home = () => {
     <div className={styles.container}>
       <Header handleLogout={handleLogout} />
       <div style={{padding: "0 40px"}}>
-        <SearchWithFilter/>
+        <SearchWithFilter setIsLoading={setIsLoading}/>
       </div>
       <div style={{ margin: '40px' }}>
         <ButtonGroup exclusive="true" sx={{ marginBlock: '10px' }}>
           <Button onClick={handleFilterChange} variant={filter === 'today' ? 'contained' : 'outlined'}>Today</Button>
           <Button onClick={handleFilterChange} variant={filter === 'this week' ? 'contained' : 'outlined'}>This Week</Button>
         </ButtonGroup>
+        {!isLoading ?
         <InfiniteScroll
           dataLength={movies.length}
           next={fetchMoreData}
@@ -84,8 +87,11 @@ const Home = () => {
               <MovieItem key={item.id} item={item} />
             ))}
           </ImageList>
-        </InfiniteScroll>
-      </div>
+          </InfiniteScroll> :  <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '50px' }}>
+            <CircularProgress />
+          </Box>
+        }
+      </div> 
     </div>
   )
 }
