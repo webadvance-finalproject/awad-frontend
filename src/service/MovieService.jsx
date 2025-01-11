@@ -4,12 +4,12 @@ const MOVIE_URI = "/movie";
 
 // TODO: paramtrize limit
 export const getTrendingMoviesByDay = async ({ token, page }) => {
-    return makeRequest(HTTP_METHOD.GET, `${MOVIE_URI}/trending/day`, null, true, token, page);
+    return makeRequest(HTTP_METHOD.GET, `${MOVIE_URI}/trending/today`, null, true, token, page);
 };
 
 // TODO: paramtrize limit
 export const getTrendingMoviesByWeek = async ({ token, page }) => {
-    return makeRequest(HTTP_METHOD.GET, `${MOVIE_URI}/trending/week`, null, true, token, page);
+    return makeRequest(HTTP_METHOD.GET, `${MOVIE_URI}/trending/this-week`, null, true, token, page);
 }
 
 export const getMovieData = async ({ movieID, token }) => {

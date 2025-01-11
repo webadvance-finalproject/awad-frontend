@@ -40,7 +40,6 @@ const Home = () => {
     const newMode = trendingMovies.mode === 'day' ? 'week' : 'day';
     const newPage = 1;
     const res = await fetchTrendingMovies(newMode, newPage);
-    console.log('res:', res);
     setTrendingMovies(prevState => ({
       ...prevState,
       movies: res.results,
@@ -92,12 +91,16 @@ const Home = () => {
             <Typography variant="h5">Trending</Typography>
             <DayWeekSwitch onChange={handleModeChange} />
           </Stack>
-          <MovieList
-            movies={trendingMovies.movies}
-            totalPages={trendingMovies.total_pages}
-            page={trendingMovies.page}
-            onPageChange={handleTrendingPageChange}
-          />
+          {trendingMovies.movies ? (
+            <MovieList
+              movies={trendingMovies.movies}
+              totalPages={trendingMovies.total_pages}
+              page={trendingMovies.page}
+              onPageChange={handleTrendingPageChange}
+            />
+          ) : (
+            <p>No Movie</p>
+          )}
         </Stack>
         <Stack>
           <Typography variant="h5">Latest Trailers</Typography>
