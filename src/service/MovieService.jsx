@@ -41,3 +41,7 @@ export const getAllGenre = async ({ token }) => {
 export const getGenresByIDs = async ({ arrID, token }) => {
     return makeRequest(HTTP_METHOD.GET, `${MOVIE_URI}/genres/find`, { ids: arrID }, true, token)
 }
+
+export const navigateByLlm = async({query, token})=>{
+    return makeRequest(HTTP_METHOD.POST, `${MOVIE_URI}/llm`, { query } ,true, token)
+}

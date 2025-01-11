@@ -13,6 +13,7 @@ import RedirectIfAuthenticated from './utils/RedirectIfAuthenticated';
 import Search from './pages/Search';
 import ActorProfile from './pages/Actor';
 import ForgotPassword from './pages/auth/ForgotPassword';
+import Cast from './pages/Cast';
 function App() {
 
   return (
@@ -32,6 +33,8 @@ function App() {
             <Route path='/actor/:id' element={<ActorProfile />} />
             <Route path='/search' element={<Search />} />
             <Route path='/movie/:id' element={<Movie />} />
+            <Route path='/movie/cast/:id' element={<Cast />} />
+
             <Route path='*' element={<Navigate to="/" replace />} />
             <Route path='/logout' element={<Logout />} />
             <Route element={<RedirectIfAuthenticated />} >

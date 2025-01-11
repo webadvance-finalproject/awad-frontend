@@ -7,7 +7,8 @@ import {
     Autocomplete,
     TextField,
     Box,
-    Typography
+    Typography,
+    Checkbox, FormControlLabel
 } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -22,6 +23,7 @@ const Filter = ({ defaultValue, onFilterChange }) => {
     const [minRating, setMinRating] = useState(defaultValue.minRating);
     const [maxRating, setMaxRating] = useState(defaultValue.maxRating);
     const [minYear, setMinYear] = useState(defaultValue.minYear);
+    const [llm, setLlm] = useState(defaultValue.llm);
     const [loading, setLoading] = useState(false);
     const user = useStore((state) => state.user);
 
@@ -30,7 +32,10 @@ const Filter = ({ defaultValue, onFilterChange }) => {
         fontWeight: 'bold',
     }
 
-
+    const handleUseAIChange = async (event) =>
+    {
+        setLlm(event.target.checked)
+    }
     const handleSearchActor = async (value) => {
         setLoading(true);
         const token = await user.getIdToken();
@@ -96,8 +101,8 @@ const Filter = ({ defaultValue, onFilterChange }) => {
     }, [])
 
     useEffect(() => {
-        onFilterChange({ actors: actors.map(actor => actor.id), genres: genres.map(genre => genre.id), minRating: minRating, maxRating: maxRating, minYear: minYear });
-    }, [actors, genres, minRating, maxRating, minYear]);
+        onFilterChange({ actors: actors.map(actor => actor.id), genres: genres.map(genre => genre.id), minRating: minRating, maxRating: maxRating, minYear: minYear, llm });
+    }, [actors, genres, minRating, maxRating, minYear, llm]);
 
     return (
         <Accordion
@@ -206,6 +211,12 @@ const Filter = ({ defaultValue, onFilterChange }) => {
                             placeholder="Từ năm"
                             value={minYear}
                             onChange={handleYearChange}
+                        />
+                    </Grid>
+                    <Grid item size={{ sm: 12, md: 2 }}>
+                        <FormControlLabel
+                            label="Sử dụng AI"
+                            control={<Checkbox checked={llm} onChange={handleUseAIChange} />}
                         />
                     </Grid>
                 </Grid>

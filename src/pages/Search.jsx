@@ -19,12 +19,11 @@ const Search = () => {
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-
+  
   const handleLogout = () => {
     signOut(auth);
     navigate('/login');
   }
-
   const getSearchMovie = async (page) => {
     const token = await user.getIdToken();
     const paramsData = {
@@ -75,7 +74,7 @@ const Search = () => {
     <div className={styles.container}>
       <Header handleLogout={handleLogout} />
       <div style={{ padding: "0 40px" }}>
-        <SearchWithFilter />
+        <SearchWithFilter setIsLoading={setIsLoading} />
       </div>
       {!isLoading ?
         <div style={{ margin: '40px' }}>

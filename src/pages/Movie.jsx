@@ -3,7 +3,6 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Box, Typography, Card, CardMedia, CardContent, Grid, Chip, Avatar, IconButton, Tooltip, Button  } from '@mui/material'; // Import 
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
-import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import InfoIcon from '@mui/icons-material/Info';
 import { useStore } from '../store'
 import { signOut } from 'firebase/auth';
@@ -17,6 +16,8 @@ import RatingDialog from '../components/RatingDialog/index.jsx';
 import ReviewList from '../components/Review/index.jsx';
 import {addFavoriteMovie, removeFavoriteMovie, getFavoriteMovie, addWatchlistMovie, removeWatchlistMovie, getWatchlistMovie, getReviewMovie, getSimilarMovies, getRecommendMovies } from '../service/UserService';
 import Recommendations from '../components/Recommendations/index.jsx';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+
 const Movie = () => {
     const { id } = useParams(); // Lấy ID từ URL param
     const user = useStore((state) => state.user);
@@ -194,7 +195,7 @@ const Movie = () => {
 
     return (
         <div className={styles.container}>
-            {user && movie ? (
+            { movie ? (
                 <div className={styles.container}>
                     <Header handleLogout={handleLogout} />
                     {user && movie && (
@@ -342,6 +343,11 @@ const Movie = () => {
                                                                 <Typography variant="body2" sx={{ color: 'white' }}>{actor.name}</Typography>
                                                             </Box>
                                                         ))}
+                                                       <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: 2 }}>
+                                                            <Typography variant="body2" sx={{ color: 'white', cursor: 'pointer', display: 'flex', alignItems: 'center' }} onClick={() => navigate(`/movie/cast/${id}`)}>
+                                                                View More <ArrowForwardIcon sx={{ marginLeft: 0.5 }} />
+                                                            </Typography>
+                                                        </Box>
                                                     </Box>
                                                 </Box>
                                             </CardContent>
