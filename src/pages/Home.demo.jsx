@@ -162,7 +162,7 @@ const Home = () => {
       <Header handleLogout={handleLogout} />
       <Banner />
       <Stack spacing={2} sx={{ paddingInline: '20vh', marginTop: '20px' }}>
-        <Stack>
+        <Stack spacing={1}>
           <Stack spacing={3} direction="row" sx={{ alignItems: 'center' }}>
             <Typography variant="h5">Trending</Typography>
             <DayWeekSwitch onChange={handleModeChange} />
@@ -178,7 +178,7 @@ const Home = () => {
             <p>No Movie</p>
           )}
         </Stack>
-        <Stack>
+        <Stack spacing={1}>
           <Typography variant="h5">Latest Trailers</Typography>
           {lastestTrailers.trailers ? (
             <TrailerList
@@ -191,7 +191,7 @@ const Home = () => {
             <p>No Latest Trailers</p>
           )}
         </Stack>
-        <Stack>
+        <Stack spacing={1}>
           <Typography variant="h5">What&apos;s Popular</Typography>
           {popularMovies.movies ? (
             <MovieList
