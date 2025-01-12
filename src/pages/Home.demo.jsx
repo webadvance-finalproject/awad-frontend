@@ -4,6 +4,7 @@ import { useStore } from '../store';
 import { signOut } from 'firebase/auth';
 import { auth } from '../config/firebase';
 import Header from '../components/Header'
+import Footer from '../components/Footer';
 import Banner from '../components/Banner';
 import DayWeekSwitch from '../components/DayWeekSwitch';
 import MovieList from '../components/MovieList';
@@ -204,6 +205,7 @@ const Home = () => {
           )}
         </Stack>
       </Stack>
+      <Footer />
     </div>
   );
 };
