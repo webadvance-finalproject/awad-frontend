@@ -9,9 +9,9 @@ const MovieList = ({ movies, totalPages, page, onPageChange }) => {
     <Stack
       spacing={2}
     >
-      <Grid container spacing={2}>
+      <Grid container spacing={2} justifyContent="space-between">
         {movies?.map((movie) => (
-          <Grid key={movie.id} size={2}>
+          <Grid key={movie.id}>
             <MovieItem item={movie} />
           </Grid>
         ))}

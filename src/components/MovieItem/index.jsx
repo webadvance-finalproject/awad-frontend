@@ -11,7 +11,6 @@ const MovieItem = ({ item }) => {
       key={`${Math.random().toString(36)}-${item.id}`}
       sx={{
         width: '10rem',
-        margin: 'auto',
         cursor: 'pointer',
       }}
       onClick={() => navigate(`/movie/${item.id}`)}

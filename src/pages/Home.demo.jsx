@@ -7,6 +7,7 @@ import Header from '../components/Header'
 import Banner from '../components/Banner';
 import DayWeekSwitch from '../components/DayWeekSwitch';
 import MovieList from '../components/MovieList';
+import TrailerList from '../components/TrailerList';
 import styles from './Profile.module.css';
 import { getTrendingMoviesByDay, getTrendingMoviesByWeek, getPopularMovies, getLastestTrailers } from '../service/MovieService';
 import { Stack, Typography } from '@mui/material';
@@ -41,6 +42,16 @@ const Home = () => {
     setTrendingMovies(prevState => ({
       ...prevState,
       movies: res.results,
+      page: value,
+      total_pages: res.total_pages,
+    }));
+  };
+
+  const handleLastestTrailerPageChange = async (event, value) => {
+    const res = await fetchLastestTrailers(value);
+    setLastestTrailers(prevState => ({
+      ...prevState,
+      trailers: res.results,
       page: value,
       total_pages: res.total_pages,
     }));
@@ -168,6 +179,16 @@ const Home = () => {
         </Stack>
         <Stack>
           <Typography variant="h5">Latest Trailers</Typography>
+          {lastestTrailers.trailers ? (
+            <TrailerList
+              trailers={lastestTrailers.trailers}
+              totalPages={lastestTrailers.total_pages}
+              page={lastestTrailers.page}
+              onPageChange={handleLastestTrailerPageChange}
+            />
+          ) : (
+            <p>No Latest Trailers</p>
+          )}
         </Stack>
         <Stack>
           <Typography variant="h5">What&apos;s Popular</Typography>
