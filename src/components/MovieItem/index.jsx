@@ -1,7 +1,7 @@
-import React from 'react';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
 import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 const MovieItem = ({ item }) => {
   const navigate = useNavigate();
@@ -11,7 +11,6 @@ const MovieItem = ({ item }) => {
       key={`${Math.random().toString(36)}-${item.id}`}
       sx={{
         width: '10rem',
-        margin: 'auto',
         cursor: 'pointer',
       }}
       onClick={() => navigate(`/movie/${item.id}`)}
@@ -28,5 +27,13 @@ const MovieItem = ({ item }) => {
     </ImageListItem>
   );
 }
+
+MovieItem.propTypes = {
+  item: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    poster_path: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+  }).isRequired,
+};
 
 export default MovieItem;

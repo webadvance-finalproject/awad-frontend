@@ -1,17 +1,20 @@
 .container {
     display: flex;
     align-items: center;
+    width: 100%;
     justify-content: center;
     margin: 20px 0px;
-    border: solid 3px rgb(3 37 65);
+    border: solid 1px rgb(3 37 65);
     border-radius: 30px;
+    overflow: hidden;
+    background-color: white;
 }
 
 .input {
     border: none;
     flex-grow: 1;
     line-height: 45.33px;
-    margin-left: 30px;
+    padding-left: 30px;
     font-size: medium;
 
     &:focus {
@@ -23,8 +26,8 @@
     border: none;
     border-radius: 30px;
     padding: 15px 30px;
-    background-color: #ACC8E5;
-    color: #112A46;
+    color: white;
+    background: linear-gradient(90deg, #19cfb4, #03e8f0);
     transition: background-color 0.5s ease;
     font-size: medium;
     &:hover {

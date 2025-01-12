@@ -6,6 +6,7 @@ import Container from '@mui/material/Container'
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Profile from './pages/Profile';
 import Home from './pages/Home';
+// import Home_demo from './pages/Home.demo';
 import Movie from './pages/Movie';
 import AuthListener from './utils/AuthListener';
 import ProtectedRoute from './utils/ProtectedRoute';
@@ -29,6 +30,7 @@ function App() {
             margin: "0 !important",
           }} >
           <Routes>
+            {/* <Route path='/' element={<Home_demo />} /> */}
             <Route path='/' element={<Home />} />
             <Route path='/actor/:id' element={<ActorProfile />} />
             <Route path='/search' element={<Search />} />
