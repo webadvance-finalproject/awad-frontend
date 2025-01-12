@@ -45,24 +45,6 @@ const Header = ({ handleLogout }) => {
             className={styles.logo}
             onClick={handleLogoClick}
           />
-
-          {/* Navigation Categories */}
-          <div className={styles.navigationContainer}>
-            <Button
-              variant="text"
-              className={`${styles.categoryButton} ${activeCategory === 'Popular' ? styles.categoryButtonActive : ''}`}
-              onClick={() => handleCategoryClick('Popular')}
-            >
-              Popular
-            </Button>
-            <Button
-              variant="text"
-              className={`${styles.categoryButton} ${activeCategory === 'Top Rating' ? styles.categoryButtonActive : ''}`}
-              onClick={() => handleCategoryClick('Top Rating')}
-            >
-              Top Rating
-            </Button>
-          </div>
         </div>
 
         {/* Logout Button */}
