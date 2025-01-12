@@ -47,3 +47,7 @@ export const getGenresByIDs = async ({ arrID, token }) => {
 export const navigateByLlm = async({query, token})=>{
     return makeRequest(HTTP_METHOD.POST, `${MOVIE_URI}/llm`, { query } ,true, token)
 }
+
+export const getPopularMovies = async ({ token, page }) => {
+    return makeRequest(HTTP_METHOD.GET, `${MOVIE_URI}/popular`, null, true, token, page);
+}

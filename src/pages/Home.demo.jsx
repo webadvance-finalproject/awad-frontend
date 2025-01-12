@@ -8,7 +8,7 @@ import Banner from '../components/Banner';
 import DayWeekSwitch from '../components/DayWeekSwitch';
 import MovieList from '../components/MovieList';
 import styles from './Profile.module.css';
-import { getTrendingMoviesByDay, getTrendingMoviesByWeek } from '../service/MovieService';
+import { getTrendingMoviesByDay, getTrendingMoviesByWeek, getPopularMovies } from '../service/MovieService';
 import { Stack, Typography } from '@mui/material';
 
 const Home = () => {
@@ -16,6 +16,11 @@ const Home = () => {
   const user = useStore((state) => state.user);
   const [trendingMovies, setTrendingMovies] = useState({
     mode: 'day', // day or week
+    movies: [],
+    page: 1,
+    total_pages: 0,
+  });
+  const [popularMovies, setPopularMovies] = useState({
     movies: [],
     page: 1,
     total_pages: 0,
@@ -35,6 +40,16 @@ const Home = () => {
       total_pages: res.total_pages,
     }));
   };
+
+  const handlePopularPageChange = async (event, value) => {
+    const res = await fetchPopularMovies(value);
+    setPopularMovies(prevState => ({
+      ...prevState,
+      movies: res.results,
+      page: value,
+      total_pages: res.total_pages,
+    }));
+  }
 
   const handleModeChange = async () => {
     const newMode = trendingMovies.mode === 'day' ? 'week' : 'day';
@@ -62,6 +77,17 @@ const Home = () => {
     }
   };
 
+  const fetchPopularMovies = async (page) => {
+    try {
+      const token = await user.getIdToken();
+      const res = await getPopularMovies({ token, page });
+      // TODO: xử lý mã lỗi trả về từ server
+      return res;
+    } catch (error) {
+      console.error("Error fetching popular movies:", error);
+    }
+  };
+
   useEffect(() => {
     const fetchInitialTrendingMovies = async () => {
       const res = await fetchTrendingMovies(trendingMovies.mode, trendingMovies.page);
@@ -73,13 +99,24 @@ const Home = () => {
         }));
       }
     };
+    const fetchInitialPopularMovies = async () => {
+      const res = await fetchPopularMovies(popularMovies.page);
+      if (res) {
+        setPopularMovies(prevState => ({
+          ...prevState,
+          movies: res.results,
+          total_pages: res.total_pages,
+        }));
+      }
+    };
 
     fetchInitialTrendingMovies();
+    fetchInitialPopularMovies();
   }, []);
 
   useEffect(() => {
-    console.log('trendingMovies:', trendingMovies);
-  }, [trendingMovies]);
+    console.log('popularMovies:', popularMovies);
+  }, [popularMovies]);
 
   return (
     <div className={styles.container}>
@@ -107,6 +144,16 @@ const Home = () => {
         </Stack>
         <Stack>
           <Typography variant="h5">What&apos;s Popular</Typography>
+          {popularMovies.movies ? (
+            <MovieList
+              movies={popularMovies.movies}
+              totalPages={popularMovies.total_pages}
+              page={popularMovies.page}
+              onPageChange={handlePopularPageChange}
+            />
+          ) : (
+            <p>No Popular Movies</p>
+          )}
         </Stack>
       </Stack>
     </div>
