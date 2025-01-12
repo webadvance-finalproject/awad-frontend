@@ -51,3 +51,7 @@ export const navigateByLlm = async({query, token})=>{
 export const getPopularMovies = async ({ token, page }) => {
     return makeRequest(HTTP_METHOD.GET, `${MOVIE_URI}/popular`, null, true, token, page);
 }
+
+export const getLastestTrailers = async ({ token, page }) => {
+    return makeRequest(HTTP_METHOD.GET, `${MOVIE_URI}/lastest-trailers`, null, true, token, page);
+}

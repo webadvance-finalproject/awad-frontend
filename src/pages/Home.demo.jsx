@@ -8,7 +8,7 @@ import Banner from '../components/Banner';
 import DayWeekSwitch from '../components/DayWeekSwitch';
 import MovieList from '../components/MovieList';
 import styles from './Profile.module.css';
-import { getTrendingMoviesByDay, getTrendingMoviesByWeek, getPopularMovies } from '../service/MovieService';
+import { getTrendingMoviesByDay, getTrendingMoviesByWeek, getPopularMovies, getLastestTrailers } from '../service/MovieService';
 import { Stack, Typography } from '@mui/material';
 
 const Home = () => {
@@ -22,6 +22,11 @@ const Home = () => {
   });
   const [popularMovies, setPopularMovies] = useState({
     movies: [],
+    page: 1,
+    total_pages: 0,
+  });
+  const [lastestTrailers, setLastestTrailers] = useState({
+    trailers: [],
     page: 1,
     total_pages: 0,
   });
@@ -77,6 +82,17 @@ const Home = () => {
     }
   };
 
+  const fetchLastestTrailers = async (page) => {
+    try {
+      const token = await user.getIdToken();
+      const res = await getLastestTrailers({ token, page });
+      //TODO: xử lý mã lỗi trả về từ server
+      return res;
+    } catch (error) {
+      console.error("Error fetching lastest trailers:", error);
+    }
+  };
+
   const fetchPopularMovies = async (page) => {
     try {
       const token = await user.getIdToken();
@@ -99,6 +115,16 @@ const Home = () => {
         }));
       }
     };
+    const fetchInitialLastestTrailers = async () => {
+      const res = await fetchLastestTrailers(lastestTrailers.page);
+      if (res) {
+        setLastestTrailers(prevState => ({
+          ...prevState,
+          trailers: res.results,
+          total_pages: res.total_pages,
+        }));
+      }
+    };
     const fetchInitialPopularMovies = async () => {
       const res = await fetchPopularMovies(popularMovies.page);
       if (res) {
@@ -109,14 +135,15 @@ const Home = () => {
         }));
       }
     };
-
+    
     fetchInitialTrendingMovies();
+    fetchInitialLastestTrailers();
     fetchInitialPopularMovies();
   }, []);
 
   useEffect(() => {
-    console.log('popularMovies:', popularMovies);
-  }, [popularMovies]);
+    console.log('lastestTrailers:', lastestTrailers);
+  }, [lastestTrailers]);
 
   return (
     <div className={styles.container}>
