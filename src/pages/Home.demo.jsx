@@ -9,13 +9,15 @@ import Banner from '../components/Banner';
 import DayWeekSwitch from '../components/DayWeekSwitch';
 import MovieList from '../components/MovieList';
 import TrailerList from '../components/TrailerList';
+import SearchWithFilter from '../components/SearchWithFilter';
 import styles from './Profile.module.css';
 import { getTrendingMoviesByDay, getTrendingMoviesByWeek, getPopularMovies, getLastestTrailers } from '../service/MovieService';
-import { Stack, Typography } from '@mui/material';
+import { CircularProgress, Stack, Typography } from '@mui/material';
 
 const Home = () => {
   const navigate = useNavigate();
   const user = useStore((state) => state.user);
+  const [isLoading, setIsLoading] = useState(false);
   const [trendingMovies, setTrendingMovies] = useState({
     mode: 'day', // day or week
     movies: [],
@@ -161,6 +163,15 @@ const Home = () => {
     <div className={styles.container}>
       <Header handleLogout={handleLogout} />
       <Banner />
+      <Stack spacing={2} sx={{ paddingInline: '20vh', marginTop: '20px' }}>
+        <SearchWithFilter setIsLoading={setIsLoading} />
+        {isLoading &&
+          <Stack sx={{ alignItems: 'center' }} spacing={2}>
+            <Typography>AI navigation processing...</Typography>
+            <CircularProgress />
+          </Stack>
+        }
+      </Stack>
       <Stack spacing={2} sx={{ paddingInline: '20vh', marginTop: '20px' }}>
         <Stack spacing={1}>
           <Stack spacing={3} direction="row" sx={{ alignItems: 'center' }}>
