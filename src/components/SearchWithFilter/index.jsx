@@ -39,10 +39,9 @@ const SearchWithFilter = ({setIsLoading}) => {
             const keyword = localState.keyword;
             if(keyword)
             {
-                const token = await user.getIdToken();
                 const data = await navigateByLlm({
                     query: keyword,
-                    token: token
+                    token: null
                 });
                 if(data && data.statusCode === 200)
                 {
