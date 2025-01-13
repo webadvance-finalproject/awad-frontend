@@ -38,9 +38,9 @@ const Filter = ({ defaultValue, onFilterChange }) => {
     }
     const handleSearchActor = async (value) => {
         setLoading(true);
-        const token = await user.getIdToken();
+        // const token = await user.getIdToken();
         if (value !== '') {
-            searchActor({ keyword: value, token, page: 1, limit: 10 })
+            searchActor({ keyword: value, page: 1, limit: 10 })
                 .then((data) => {
                     setActorOptions(data.results);
                     setLoading(false);
@@ -74,16 +74,14 @@ const Filter = ({ defaultValue, onFilterChange }) => {
 
     useEffect(() => {
         const getAllGenreForFilter = async () => {
-            const token = await user.getIdToken();
-            const rs = await getAllGenre({ token });
+            const rs = await getAllGenre({ token: null });
             setGenreOptions(rs)
         }
         getAllGenreForFilter();
 
         const getCurrentGenre = async () => {
             if (defaultValue.genres.length > 0) {
-                const token = await user.getIdToken();
-                const rs = await getGenresByIDs({ arrID: defaultValue.genres, token })
+                const rs = await getGenresByIDs({ arrID: defaultValue.genres, token:null })
                 setGenres(rs);
             }
         }
@@ -91,8 +89,8 @@ const Filter = ({ defaultValue, onFilterChange }) => {
 
         const getCurrentActor = async () => {
             if (defaultValue.actors.length > 0) {
-                const token = await user.getIdToken();
-                const rs = await getActorsByIDs({ arrID: defaultValue.actors, token })
+                // const token = await user.getIdToken();
+                const rs = await getActorsByIDs({ arrID: defaultValue.actors })
                 console.log(rs);
                 setActors(rs);
             }

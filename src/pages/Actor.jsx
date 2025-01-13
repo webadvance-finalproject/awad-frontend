@@ -40,7 +40,6 @@ function TabPanel(props) {
 const ActorProfile = () => {
   const [tabValue, setTabValue] = React.useState(0);
     const { id } = useParams(); 
-    const user = useStore((state) => state.user);
     const [actor, setActor] = useState({});
     const handleTabChange = (event, newValue) => {
         setTabValue(newValue);
@@ -49,8 +48,8 @@ const ActorProfile = () => {
           const fetchActorData = async () => {
               if (id) {
                   try {
-                        const token = await user.getIdToken();
-                        const data = await getActorDetail({ actorID: id, token });
+                        const data = await getActorDetail({ actorID: id, token : null });
+                        console.log(data);
                         if (data && data.status !== API_STATUS.INTERNAL_ERROR) {
                             setActor(data);
                         }                                                                                                                                                                        

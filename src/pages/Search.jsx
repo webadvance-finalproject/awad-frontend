@@ -26,7 +26,6 @@ const Search = () => {
     navigate('/login');
   }
   const getSearchMovie = async (page) => {
-    const token = await user.getIdToken();
     const paramsData = {
       keyword: searchParams.get('keyword'),
       actors: searchParams.get('actors') ? searchParams.get('actors').split(',') : [],
@@ -35,7 +34,7 @@ const Search = () => {
       maxRating: searchParams.get('maxRating'),
       minYear: searchParams.get('minYear'),
     }
-    return await searchMovie({ data: paramsData, token, page });
+    return await searchMovie({ data: paramsData, token: null, page });
   }
 
   const fetchMoreData = async () => {

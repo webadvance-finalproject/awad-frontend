@@ -16,7 +16,6 @@ import { CircularProgress, Stack, Typography } from '@mui/material';
 
 const Home = () => {
   const navigate = useNavigate();
-  const user = useStore((state) => state.user);
   const [isLoading, setIsLoading] = useState(false);
   const [trendingMovies, setTrendingMovies] = useState({
     mode: 'day', // day or week
@@ -42,6 +41,7 @@ const Home = () => {
 
   const handleTrendingPageChange = async (event, value) => {
     const res = await fetchTrendingMovies(trendingMovies.mode, value);
+    console.log("handleTrendingPageChange",res)
     setTrendingMovies(prevState => ({
       ...prevState,
       movies: res.results,
@@ -85,10 +85,9 @@ const Home = () => {
 
   const fetchTrendingMovies = async (mode, page) => {
     try {
-      const token = await user.getIdToken();
       const res = mode === 'day'
-        ? await getTrendingMoviesByDay({ token, page })
-        : await getTrendingMoviesByWeek({ token, page });
+        ? await getTrendingMoviesByDay({ toke: null, page })
+        : await getTrendingMoviesByWeek({ toke: null, page });
       // TODO: xử lý mã lỗi trả về từ server
       return res;
     } catch (error) {
@@ -98,8 +97,7 @@ const Home = () => {
 
   const fetchLastestTrailers = async (page) => {
     try {
-      const token = await user.getIdToken();
-      const res = await getLastestTrailers({ token, page });
+      const res = await getLastestTrailers({ toke: null, page });
       //TODO: xử lý mã lỗi trả về từ server
       return res;
     } catch (error) {
@@ -109,8 +107,7 @@ const Home = () => {
 
   const fetchPopularMovies = async (page) => {
     try {
-      const token = await user.getIdToken();
-      const res = await getPopularMovies({ token, page });
+      const res = await getPopularMovies({ toke: null, page });
       // TODO: xử lý mã lỗi trả về từ server
       return res;
     } catch (error) {
