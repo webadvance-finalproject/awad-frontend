@@ -10,7 +10,6 @@ import { auth } from '../config/firebase';
 import Header from "../components/Header";
 import styles from './Profile.module.css';
 import { getMovieData } from '../service/MovieService'
-import { API_STATUS } from "../config/common.jsx";
 import VoteAverageCircle from '../components/VoteAverageCircle/index.jsx';
 import RatingDialog from '../components/RatingDialog/index.jsx';
 import ReviewList from '../components/Review/index.jsx';
@@ -22,7 +21,7 @@ const Movie = () => {
     const { id } = useParams(); // Lấy ID từ URL param
     const user = useStore((state) => state.user);
     const navigate = useNavigate();
-    const [movie, setMovie] = useState({})
+    const [movie, setMovie] = useState(null)
     const [cast, setCast] = useState([]); // State for cast
     const [isFavorite, setIsFavorite] = useState(false);
     const [isWatchlist, setIsWatchlist] = useState(false);
@@ -47,9 +46,8 @@ const Movie = () => {
         const fetchMovieData = async () => {
             if (id) {
                 try {
-                    const token = await user.getIdToken();
-                    const data = await getMovieData({ movieID: id, token });
-                    if (data && data.status !== API_STATUS.INTERNAL_ERROR) {
+                    const data = await getMovieData({ movieID: id, token: null });
+                    if (data) {
                         setMovie(data);
                         setCast(data?.credits?.cast);
                         setRating(data?.vote_average);
@@ -71,7 +69,6 @@ const Movie = () => {
             if (id) {
                 try {
                     const data = await getReviewMovie({ movieID: id });
-                    console.log(data);
                     if (data && data.statusCode === 200) {
                         setReviews(data?.data?.review);
                     }
@@ -118,8 +115,7 @@ const Movie = () => {
         const fetchSimilarMovies = async () => {
             if (id) {
                 try {
-                    const token = await user.getIdToken();
-                    const data = await getSimilarMovies({ token, movieID: id });
+                    const data = await getSimilarMovies({ token:null , movieID: id });
                     if(data && data.statusCode === 200 && data.data?.similarMovies){
                         setRecommendations(data.data.similarMovies);
                     }
@@ -134,11 +130,10 @@ const Movie = () => {
 
     useEffect(() => {
         const fetchRecommendMovies = async () => {
-            if (id) {
+            if (id && user) {
                 try {
                     const token = await user.getIdToken();
                     const data = await getRecommendMovies({ token, movieID: id });
-                    console.log(data);
                     if(data && data.statusCode === 200 && data.data?.similarMovies){
                         setForYouMovies(data.data?.similarMovies);
                     }
@@ -198,7 +193,7 @@ const Movie = () => {
             { movie ? (
                 <div className={styles.container}>
                     <Header handleLogout={handleLogout} />
-                    {user && movie && (
+                    { movie && (
                         <Box sx={{
                             padding: 4,
                             backgroundColor: '#121212',
@@ -276,7 +271,6 @@ const Movie = () => {
                                                               backgroundColor: '#333',
                                                             }
                                                           }}
-                                                          disabled={!user}
                                                           onClick={user && handleOpen}
                                                     >
                                                         {"What's your Vibe?"}

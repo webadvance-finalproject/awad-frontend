@@ -74,16 +74,14 @@ const Filter = ({ defaultValue, onFilterChange }) => {
 
     useEffect(() => {
         const getAllGenreForFilter = async () => {
-            const token = await user.getIdToken();
-            const rs = await getAllGenre({ token });
+            const rs = await getAllGenre({ token: null });
             setGenreOptions(rs)
         }
         getAllGenreForFilter();
 
         const getCurrentGenre = async () => {
             if (defaultValue.genres.length > 0) {
-                const token = await user.getIdToken();
-                const rs = await getGenresByIDs({ arrID: defaultValue.genres, token })
+                const rs = await getGenresByIDs({ arrID: defaultValue.genres, token:null })
                 setGenres(rs);
             }
         }
