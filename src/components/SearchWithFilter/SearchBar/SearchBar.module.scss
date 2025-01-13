@@ -1,0 +1,37 @@
+.container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+    margin: 20px 0px;
+    border: solid 1px rgb(3 37 65);
+    border-radius: 30px;
+    overflow: hidden;
+    background-color: white;
+}
+
+.input {
+    border: none;
+    flex-grow: 1;
+    line-height: 45.33px;
+    padding-left: 30px;
+    font-size: medium;
+
+    &:focus {
+        outline: none;
+    }
+}
+
+.button {
+    border: none;
+    border-radius: 30px;
+    padding: 15px 30px;
+    color: white;
+    cursor: pointer;
+    background: linear-gradient(90deg, #19cfb4, #03e8f0);
+    transition: background-color 0.5s ease;
+    font-size: medium;
+    &:hover {
+        background-color: rgb(0, 170, 255);
+    }
+}

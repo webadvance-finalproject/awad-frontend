@@ -6,8 +6,8 @@ import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import * as yup from 'yup'
 import { auth } from '../../config/firebase'
-import { createUserWithEmailAndPassword } from 'firebase/auth'
-import {useNavigate, Link} from 'react-router-dom'
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth'
+import { useNavigate, Link } from 'react-router-dom'
 
 const SignUp = () => {
     const [email, setEmail] = useState('');
@@ -20,14 +20,15 @@ const SignUp = () => {
         email: yup.string().email('Email không hợp lệ').required('Vui lòng nhập email'),
         password: yup.string().min(6, 'Mật khẩu phải có ít nhất 6 ký tự').required('Vui lòng nhập mật khẩu'),
     });
-    
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         try {
             await validationSchema.validate({ email, password });
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            navigate('/login')
+            await sendEmailVerification(userCredential.user);
+            navigate('/login?email_verified=false')
         } catch (error) {
             // Xử lý lỗi
             console.log(error);
@@ -61,19 +62,19 @@ const SignUp = () => {
                         margin="normal"
                     />
                     {error && <p style={{ color: 'red' }}>{error}</p>}
-                    <Button 
-                        type="submit" 
-                        variant="contained" 
-                        color="primary" 
-                        fullWidth 
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        fullWidth
                         sx={{ mt: '15px' }}
                         disabled={loading}
                     >
                         {loading ? 'Đang đăng ký...' : 'Đăng ký'}
                     </Button>
                 </form>
-                <Typography variant='subtitle1' sx={{margin: '5px'}}>Đã có tài khoản?
-                    <Link to='/login'>Đăng nhập</Link>
+                <Typography variant='subtitle1' sx={{ margin: '5px' }}>Đã có tài khoản?
+                    &nbsp;<Link to='/login'>Đăng nhập</Link>
                 </Typography>
             </Box>
         </Card>

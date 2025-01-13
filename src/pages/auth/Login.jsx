@@ -1,5 +1,4 @@
-import React, { useState } from 'react'
-import Container from '@mui/material/Container'
+import React, { useEffect, useState } from 'react'
 import { Box } from '@mui/material'
 import Card from '@mui/material/Card'
 import Typography from '@mui/material/Typography'
@@ -8,9 +7,8 @@ import Button from '@mui/material/Button'
 import GoogleIcon from '@mui/icons-material/Google';
 import * as yup from 'yup'
 import { auth } from '../../config/firebase'
-import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, sendEmailVerification } from 'firebase/auth'
 import {useNavigate, Link} from 'react-router-dom'
-import { useStore } from '../../store'
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -18,7 +16,6 @@ const Login = () => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate()
-    const user = useStore(state => state.user)
 
     const validationSchema = yup.object().shape({
         email: yup.string().email('Email không hợp lệ').required('Vui lòng nhập email'),
@@ -28,10 +25,17 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+        setError('');
         try {
             await validationSchema.validate({ email, password });
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
-            navigate('/')
+            if (userCredential.user.emailVerified) {
+                navigate('/')
+            }
+            else {
+                sendEmailVerification(userCredential.user);
+                setError("Hệ thống đã gửi email xác thực tài khoản đến email của bạn. Vui lòng xác thực tài khoản trước khi đăng nhập.")
+            }
         } catch (error) {
             // Xử lý lỗi
             console.log(error)
@@ -50,6 +54,13 @@ const Login = () => {
             console.error("Error signing in with Google:", error);
         }
     }
+
+    useEffect(() => {
+        const queryParams = new URLSearchParams(window.location.search);
+        if (queryParams.get('email_verified') === 'false') {
+            setError("Hệ thống đã gửi email xác thực tài khoản đến email của bạn. Vui lòng xác thực tài khoản trước khi đăng nhập.");
+        }
+    }, [])
 
     return (
         <Card variant='outlined' sx={{ width: '500px', marginTop: '30px', padding: '30px' }} >
@@ -86,14 +97,26 @@ const Login = () => {
                         {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
                     </Button>
                 </form>
-                <Typography variant='subtitle1' sx={{margin: '5px'}}>Chưa có tài khoản?
-                    <Link to='/register'>Đăng ký</Link>
+                <Typography 
+                    variant='subtitle1' 
+                    sx={{
+                        margin: '5px',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
+                    }}
+                >
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        Chưa có tài khoản?
+                        &nbsp;<Link to='/register'>Đăng ký</Link>
+                    </Box>
+                    <Link to='/forgot-password'>Lấy lại mật khẩu</Link>&nbsp;
                 </Typography>
             <Button 
                 variant="contained" 
                 color="primary" 
                 fullWidth 
-                sx={{ mt: '15px' }}
+                sx={{ mt: '20px' }}
                 onClick={handleGoogleLogin}
                 startIcon={<GoogleIcon />}
             >
