@@ -15,6 +15,7 @@ import Search from './pages/Search';
 import ActorProfile from './pages/Actor';
 import ForgotPassword from './pages/auth/ForgotPassword';
 import Cast from './pages/Cast';
+
 function App() {
 
   return (
@@ -39,6 +40,7 @@ function App() {
 
             <Route path='*' element={<Navigate to="/" replace />} />
             <Route path='/logout' element={<Logout />} />
+
             <Route element={<RedirectIfAuthenticated />} >
               <Route path='/register' element={<SignUp />} />
               <Route path='/login' element={<Login />} />
@@ -47,6 +49,7 @@ function App() {
             <Route element={<ProtectedRoute />}>
               <Route path='/profile' element={<Profile />} />
             </Route>
+
           </Routes>
         </Container>
       </AuthListener>

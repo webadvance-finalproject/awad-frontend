@@ -11,6 +11,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import MovieItem from '../components/MovieItem';
 import SearchWithFilter from '../components/SearchWithFilter';
 
+
 const Search = () => {
   const user = useStore((state) => state.user);
   const [movies, setMovies] = useState([]);
@@ -19,7 +20,7 @@ const Search = () => {
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  
+
   const handleLogout = () => {
     signOut(auth);
     navigate('/login');
@@ -70,6 +71,7 @@ const Search = () => {
     fetchMovies();
   }, [searchParams])
 
+
   return (
     <div className={styles.container}>
       <Header handleLogout={handleLogout} />
@@ -101,6 +103,7 @@ const Search = () => {
           <CircularProgress />
         </Box>
       }
+
     </div>
   )
 }

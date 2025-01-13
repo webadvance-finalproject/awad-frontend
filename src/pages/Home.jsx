@@ -68,6 +68,7 @@ const Home = () => {
       <Header handleLogout={handleLogout} />
       <div style={{padding: "0 40px"}}>
         <SearchWithFilter setIsLoading={setIsLoading}/>
+
       </div>
       <div style={{ margin: '40px' }}>
         <ButtonGroup exclusive="true" sx={{ marginBlock: '10px' }}>
@@ -75,6 +76,7 @@ const Home = () => {
           <Button onClick={handleFilterChange} variant={filter === 'this week' ? 'contained' : 'outlined'}>This Week</Button>
         </ButtonGroup>
         {!isLoading ?
+
         <InfiniteScroll
           dataLength={movies.length}
           next={fetchMoreData}
@@ -92,6 +94,7 @@ const Home = () => {
           </Box>
         }
       </div> 
+
     </div>
   )
 }

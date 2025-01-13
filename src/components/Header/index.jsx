@@ -27,7 +27,6 @@ const Header = ({ handleLogout }) => {
   const handleLogin = () => {
     navigate('/login')
   }
-
   return (
     <Toolbar sx={{
       all: 'unset',
