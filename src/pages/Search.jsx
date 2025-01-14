@@ -34,6 +34,12 @@ const Search = () => {
       maxRating: searchParams.get('maxRating'),
       minYear: searchParams.get('minYear'),
     }
+    console.log(user);
+    let userID = null;
+    if (user) {
+      userID = user.uid;
+    }
+    paramsData.userID = userID;
     return await searchMovie({ data: paramsData, token: null, page });
   }
 
