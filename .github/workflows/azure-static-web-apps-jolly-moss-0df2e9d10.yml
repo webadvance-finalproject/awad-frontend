@@ -26,7 +26,7 @@ jobs:
       - name: 'Create env file'
         run: |
           touch .env
-          echo REACT_APP_API_URL=${{ secrets.VITE_API_HOST }} >> .env
+          echo VITE_API_HOST=${{ secrets.VITE_API_HOST }} >> .env
           
       - name: Install OIDC Client from Core Package
         run: npm install @actions/core@1.6.0 @actions/http-client
